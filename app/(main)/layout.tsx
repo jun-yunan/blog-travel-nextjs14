@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import Header from './_components/header';
+import Footer from './_components/footer';
 
 interface LayoutMainProps {
   children: React.ReactNode;
@@ -7,9 +8,10 @@ interface LayoutMainProps {
 
 const LayoutMain: FunctionComponent<LayoutMainProps> = ({ children }) => {
   return (
-    <div className="flex flex-col w-full h-full items-center">
+    <div className="w-full h-full flex flex-col items-center">
       <Header />
       {children}
+      <Footer />
     </div>
   );
 };

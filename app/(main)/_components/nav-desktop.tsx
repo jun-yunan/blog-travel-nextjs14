@@ -1,6 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import { FunctionComponent } from 'react';
 import { ToggleTheme } from './toggle-theme';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 interface NavDesktopProps {}
 interface NavItem {
@@ -10,11 +14,15 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     name: 'Dashboard',
-    href: '/',
+    href: '/dashboard',
   },
   {
-    name: 'Services',
-    href: '/services',
+    name: 'Blog',
+    href: '/blog',
+  },
+  {
+    name: 'Destinations',
+    href: '/destinations',
   },
   {
     name: 'Tour',
@@ -31,13 +39,19 @@ const navItems: NavItem[] = [
 ];
 
 const NavDesktop: FunctionComponent<NavDesktopProps> = () => {
+  const pathname = usePathname();
   return (
-    <div className="lg:flex hidden items-center gap-x-6 px-10 py-1 rounded-full border-2 border-gray-200">
+    <div className="lg:flex hidden items-center">
       {navItems.map((item, index) => (
         <Link
           href={item.href}
           key={index}
-          className="text-base font-medium py-2 px-4 rounded-full hover:bg-purple-200 dark:hover:bg-purple-800"
+          className={cn(
+            'text-base font-medium py-2 px-4 rounded-lg hover:bg-gray-100 bg-transparent',
+            pathname === item.href
+              ? 'text-purple-600 font-semibold bg-purple-200 hover:bg-purple-200'
+              : 'bg-white',
+          )}
         >
           {item.name}
         </Link>
