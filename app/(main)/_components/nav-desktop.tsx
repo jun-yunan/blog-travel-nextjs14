@@ -17,8 +17,8 @@ const navItems: NavItem[] = [
     href: '/dashboard',
   },
   {
-    name: 'Blog',
-    href: '/blog',
+    name: 'Blogs',
+    href: '/blogs',
   },
   {
     name: 'Destinations',

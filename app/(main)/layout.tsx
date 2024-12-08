@@ -10,7 +10,7 @@ const LayoutMain: FunctionComponent<LayoutMainProps> = ({ children }) => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       <Header />
-      {children}
+      <main className="w-full mt-[60px]">{children}</main>
       <Footer />
     </div>
   );

@@ -1,11 +1,14 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { isAxiosError } from 'axios';
+import { useUserStore } from './useUserStore';
+import { User } from '@/types/user';
 
 export const useAuth = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const { setUser: setUserStore } = useUserStore();
 
   const router = useRouter();
 
@@ -24,18 +27,27 @@ export const useAuth = () => {
           console.log(data);
 
           setUser(data);
+          setUserStore(data);
         } else {
           setUser(null);
-          router.push('/login');
+          setUserStore(null);
+          router.push('/sign-in');
         }
-      } catch (error: any) {
-        setError(error.message || 'Something went wrong');
+      } catch (error) {
+        setUserStore(null);
+        if (isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            setError('Unauthorized');
+            router.push('/sign-in');
+          }
+        }
+        setError('Something went wrong');
       } finally {
         setIsLoading(false);
       }
     };
     checkAuth();
-  }, [router]);
+  }, [router, setUserStore]);
 
   return { user, isLoading, error };
 };
