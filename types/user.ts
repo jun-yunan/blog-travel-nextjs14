@@ -11,4 +11,5 @@ export interface User {
   dateOfBirth: Date;
   location: string;
   personalWebsite: string;
+  imageUrl: string;
 }

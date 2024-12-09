@@ -23,7 +23,10 @@ import { isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/providers/tanstack-query-provider';
-import { CloudUpload, Trash2 } from 'lucide-react';
+import { CloudUpload, Loader2, Trash2 } from 'lucide-react';
+import { DialogUploadImage } from '../../_components/dialog-upload-image';
+import Image from 'next/image';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface EditProfileProps {}
 
@@ -38,8 +41,10 @@ export const formEditProfile = z.object({
 const EditProfile: FunctionComponent<EditProfileProps> = () => {
   const [date, setDate] = useState<Date>();
 
-  const { data: user } = useQuery({
-    queryKey: ['profile'],
+  const { setOpenDialogUploadImage } = useUserStore();
+
+  const { data: user, isLoading } = useQuery({
+    queryKey: ['currentUser', 'user'],
     queryFn: getCurrentUser,
   });
 
@@ -53,7 +58,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
     mutationFn: updateProfileUserById,
     onSuccess: () => {
       toast.success('Profile updated successfully.');
-      queryClient.invalidateQueries({ queryKey: ['profile', 'user'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUser', 'user'] });
     },
     onError(error, variables, context) {
       if (isAxiosError(error)) {
@@ -94,103 +99,140 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
   };
 
   return (
-    <div className="w-full flex flex-col items-start px-6">
-      <div className="flex items-center gap-6">
-        <div className="w-[75px] h-[75px] rounded-full bg-purple-300"></div>
-        <div className="flex items-center gap-x-4">
-          <Button variant="outline">
-            <CloudUpload /> Upload new picture
-          </Button>
-          <Button variant="destructive">
-            <Trash2 /> Delete
-          </Button>
+    <>
+      <DialogUploadImage />
+      <div className="w-full flex flex-col items-start px-6">
+        <div className="flex items-center gap-6">
+          {user?.imageUrl ? (
+            <Avatar className="w-[75px] h-[75px]">
+              <AvatarImage
+                src={user.imageUrl}
+                className="object-cover"
+                alt={`@${user.username}`}
+              />
+              <AvatarFallback>
+                <Loader2 className="animate-spin" />
+              </AvatarFallback>
+            </Avatar>
+          ) : (
+            <Avatar className="w-[75px] h-[75px]">
+              <AvatarImage
+                src=""
+                className="object-cover"
+                alt={`@${user?.username}`}
+              />
+              <AvatarFallback>
+                <Loader2 className="animate-spin" />
+              </AvatarFallback>
+            </Avatar>
+          )}
+          <div className="flex items-center gap-x-4">
+            <Button
+              variant="outline"
+              onClick={() => setOpenDialogUploadImage(true)}
+            >
+              <CloudUpload /> Upload new picture
+            </Button>
+            <Button variant="destructive">
+              <Trash2 /> Delete
+            </Button>
+          </div>
         </div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-8 space-y-6 w-full flex flex-col"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              disabled={isLoading}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="w-full h-[44px] text-lg"
+                      type="text"
+                      placeholder=""
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="location"
+              disabled={isLoading}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Location</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="w-full h-[44px] text-lg"
+                      type="text"
+                      placeholder=""
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="bio"
+              disabled={isLoading}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Bio</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="" {...field} rows={5} />
+                  </FormControl>
+                  <FormDescription>
+                    Brief description for your profile. URLs are hyperlinked.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="personalWebsite"
+              disabled={isLoading}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base">Personal Website</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="h-[44px] text-lg"
+                      type="text"
+                      placeholder=""
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Your home page, blog, or company site.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DatePicker
+              isLoading={isLoading}
+              date={date}
+              setDate={setDate}
+              form={form}
+            />
+            <Button disabled={isPending} className="mt-6 rounded-full self-end">
+              Save Profile
+            </Button>
+          </form>
+        </Form>
       </div>
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-8 space-y-6 w-full flex flex-col"
-        >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Name</FormLabel>
-                <FormControl>
-                  <Input
-                    className="w-full h-[44px] text-lg"
-                    type="text"
-                    placeholder=""
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Location</FormLabel>
-                <FormControl>
-                  <Input
-                    className="w-full h-[44px] text-lg"
-                    type="text"
-                    placeholder=""
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="bio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Bio</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="" {...field} rows={5} />
-                </FormControl>
-                <FormDescription>
-                  Brief description for your profile. URLs are hyperlinked.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="personalWebsite"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base">Personal Website</FormLabel>
-                <FormControl>
-                  <Input
-                    className="h-[44px] text-lg"
-                    type="text"
-                    placeholder=""
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Your home page, blog, or company site.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <DatePicker date={date} setDate={setDate} form={form} />
-          <Button disabled={isPending} className="mt-6 rounded-full self-end">
-            Save Profile
-          </Button>
-        </form>
-      </Form>
-    </div>
+    </>
   );
 };
 

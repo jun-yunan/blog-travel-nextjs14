@@ -3,6 +3,7 @@ import {
   CreditCard,
   Github,
   LifeBuoy,
+  Loader2,
   LogOut,
   NotebookPen,
   PenLine,
@@ -21,16 +22,37 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { getCurrentUser } from '@/api/user';
 
 export function Account() {
   const router = useRouter();
+  const { data: user } = useQuery({
+    queryKey: ['currentUser', 'user'],
+    queryFn: getCurrentUser,
+  });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        {user?.imageUrl ? (
+          <Avatar>
+            <AvatarImage
+              className="object-cover"
+              src={user.imageUrl}
+              alt={`@${user.username}`}
+            />
+            <AvatarFallback>
+              <Loader2 className="animate-spin" />
+            </AvatarFallback>
+          </Avatar>
+        ) : (
+          <Avatar>
+            <AvatarImage src="" alt={`@${user?.username}`} />
+            <AvatarFallback>
+              <Loader2 className="animate-spin" />
+            </AvatarFallback>
+          </Avatar>
+        )}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>

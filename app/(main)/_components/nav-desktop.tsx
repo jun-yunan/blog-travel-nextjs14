@@ -47,10 +47,9 @@ const NavDesktop: FunctionComponent<NavDesktopProps> = () => {
           href={item.href}
           key={index}
           className={cn(
-            'text-base font-medium py-2 px-4 rounded-lg hover:bg-gray-100 bg-transparent',
-            pathname === item.href
-              ? 'text-purple-600 font-semibold bg-purple-200 hover:bg-purple-200'
-              : 'bg-white',
+            'text-base font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-all duration-300 dark:hover:text-black bg-transparent',
+            pathname === item.href &&
+              'text-purple-600 font-semibold bg-purple-200 hover:bg-purple-200',
           )}
         >
           {item.name}

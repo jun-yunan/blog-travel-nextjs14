@@ -19,15 +19,22 @@ interface DatePickerProps {
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
   form: any;
+  isLoading?: boolean;
 }
 
-export function DatePicker({ date, setDate, form }: DatePickerProps) {
+export function DatePicker({
+  date,
+  setDate,
+  form,
+  isLoading = false,
+}: DatePickerProps) {
   return (
     <div className="flex flex-col items-start">
       <Label className="text-base mb-2">Date Of Birth</Label>
       <Popover>
         <PopoverTrigger asChild>
           <Button
+            disabled={isLoading}
             variant={'outline'}
             className={cn(
               'w-full h-[44px] text-base justify-start text-left font-normal',

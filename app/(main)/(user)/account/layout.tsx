@@ -4,7 +4,7 @@ import { FunctionComponent, useEffect } from 'react';
 import SidebarSettings from '../_components/sidebar-settings';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePathname } from 'next/navigation';
-import { Crown } from 'lucide-react';
+import { Crown, Loader2 } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/api/user';
@@ -37,10 +37,28 @@ const LayoutSettings: FunctionComponent<LayoutSettingsProps> = ({
     <div className="w-[60%] mt-10 h-[1500px] flex flex-col items-start gap-y-8">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-x-4">
-          <Avatar className="w-[60px] h-[60px]">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          {currentUser?.imageUrl ? (
+            <Avatar className="w-[60px] h-[60px]">
+              <AvatarImage
+                className="object-cover"
+                src={currentUser.imageUrl}
+                alt={`@${currentUser.username}`}
+              />
+              <AvatarFallback>
+                <Loader2 className="animate-spin" />
+              </AvatarFallback>
+            </Avatar>
+          ) : (
+            <Avatar className="w-[60px] h-[60px]">
+              <AvatarImage
+                src="https://github.com/shadcn.png"
+                alt={`@${currentUser?.username}`}
+              />
+              <AvatarFallback>
+                <Loader2 className="animate-spin" />
+              </AvatarFallback>
+            </Avatar>
+          )}
           <div className="flex flex-col items-start justify-around">
             <p className="text-lg font-semibold">
               {isError ? '' : currentUser?.username} {pathname}

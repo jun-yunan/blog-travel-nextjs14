@@ -29,21 +29,37 @@ export const updateProfileUserById = async ({
   userId: string;
   data: z.infer<typeof formEditProfile>;
 }): Promise<User | null> => {
-  try {
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
-      data,
-      {
-        withCredentials: true,
-      },
-    );
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+    data,
+    {
+      withCredentials: true,
+    },
+  );
 
-    if (response.status === 200 && response.data) {
-      return response.data;
-    }
-    return null;
-  } catch (error) {
-    console.log(error);
-    return null;
+  if (response.status === 200 && response.data) {
+    return response.data;
   }
+  return null;
+};
+
+export const updateUserAvatar = async ({
+  image,
+}: {
+  image: File;
+}): Promise<User | null> => {
+  const formData = new FormData();
+  formData.set('image', image);
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/me/update-avatar`,
+    formData,
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+  return null;
 };
