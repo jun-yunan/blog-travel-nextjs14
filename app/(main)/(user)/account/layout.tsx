@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import SidebarSettings from '../_components/sidebar-settings';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePathname } from 'next/navigation';
@@ -8,6 +8,7 @@ import { Crown } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/api/user';
+import { useUserStore } from '@/hooks/useUserStore';
 
 interface LayoutSettingsProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ const LayoutSettings: FunctionComponent<LayoutSettingsProps> = ({
   children,
 }) => {
   const pathname = usePathname();
+  const { setUser } = useUserStore();
   const {
     data: currentUser,
     isPending,
@@ -26,6 +28,11 @@ const LayoutSettings: FunctionComponent<LayoutSettingsProps> = ({
     queryKey: ['currentUser', 'user'],
     queryFn: getCurrentUser,
   });
+  useEffect(() => {
+    if (currentUser) {
+      setUser(currentUser);
+    }
+  }, [currentUser, setUser]);
   return (
     <div className="w-[60%] mt-10 h-[1500px] flex flex-col items-start gap-y-8">
       <div className="flex w-full items-center justify-between">

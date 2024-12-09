@@ -12,7 +12,7 @@ const listSettings = [
     name: 'General',
   },
   {
-    href: '/account/edit',
+    href: '/account/edit-profile',
     name: 'Edit Profile',
   },
   {
@@ -45,8 +45,9 @@ const SidebarSettings: FunctionComponent<SidebarSettingsProps> = () => {
           href={item.href}
           key={index}
           className={cn(
-            'text-base text-gray-600',
-            item.href === pathname && 'font-semibold text-black text-base',
+            'text-base text-gray-600 dark:text-gray-400',
+            item.href === pathname &&
+              'font-semibold text-black text-base dark:text-white',
           )}
         >
           {item.name}
