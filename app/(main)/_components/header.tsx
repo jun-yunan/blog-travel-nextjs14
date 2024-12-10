@@ -8,14 +8,17 @@ import { useAuth } from '@/hooks/useAuth';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import SearchHeader from './search-header';
+import { usePathname } from 'next/navigation';
 
 interface HeaderProps {}
 
 const Header: FunctionComponent<HeaderProps> = () => {
   const { user, isLoading, error } = useAuth();
   return (
-    <div className="fixed z-50 flex items-center justify-around w-full h-[60px]">
+    <div className="fixed z-50 flex items-center justify-around w-full h-[75px]">
       <Logo />
+      <SearchHeader />
       <NavDesktop />
       {isLoading ? (
         <div className="animate-spin h-[48px] w-[48px] rounded-full bg-gray-300"></div>

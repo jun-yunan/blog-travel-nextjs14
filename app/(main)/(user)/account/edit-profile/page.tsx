@@ -23,7 +23,7 @@ import { isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/providers/tanstack-query-provider';
-import { CloudUpload, Loader2, Trash2 } from 'lucide-react';
+import { CloudUpload, Loader2, Trash2, User } from 'lucide-react';
 import { DialogUploadImage } from '../../_components/dialog-upload-image';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -122,7 +122,8 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                 alt={`@${user?.username}`}
               />
               <AvatarFallback>
-                <Loader2 className="animate-spin" />
+                {/* <Loader2 className="animate-spin" /> */}
+                <User />
               </AvatarFallback>
             </Avatar>
           )}

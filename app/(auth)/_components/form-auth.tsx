@@ -36,9 +36,31 @@ import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 
 const formAuthSchema = z.object({
-  name: z.string().min(3),
+  username: z
+    .string()
+    .min(3, { message: 'Username must be at least 3 characters long' })
+    .max(50, { message: 'Username must not exceed 50 characters' })
+    .regex(/^[a-zA-Z0-9_]+$/, {
+      message: 'Username can only contain letters, numbers, and underscores',
+    })
+    .refine((val) => !/\s/.test(val), {
+      message: 'Username must not contain spaces',
+    }),
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long' })
+    .max(50, { message: 'Password must not exceed 50 characters' })
+    .regex(/[A-Z]/, {
+      message: 'Password must contain at least one uppercase letter',
+    })
+    .regex(/[a-z]/, {
+      message: 'Password must contain at least one lowercase letter',
+    })
+    .regex(/[0-9]/, { message: 'Password must contain at least one number' })
+    .regex(/[@$!%*?&#^()-_=+]/, {
+      message: 'Password must contain at least one special character',
+    }),
 });
 
 const FormAuth: FunctionComponent<FormAuthProps> = ({ variant }) => {
@@ -52,7 +74,7 @@ const FormAuth: FunctionComponent<FormAuthProps> = ({ variant }) => {
       if (variant === 'sign-up') {
         return await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up`,
-          values,
+          { ...values, username: `@${values.username}` },
         );
       } else {
         return await axios.post(
@@ -94,7 +116,7 @@ const FormAuth: FunctionComponent<FormAuthProps> = ({ variant }) => {
   });
   const form = useForm<z.infer<typeof formAuthSchema>>({
     defaultValues: {
-      name: '',
+      username: '',
       email: '',
       password: '',
     },
@@ -107,12 +129,12 @@ const FormAuth: FunctionComponent<FormAuthProps> = ({ variant }) => {
 
   useEffect(() => {
     if (variant === 'sign-in') {
-      form.setValue('name', 'aaaaaaa');
+      form.setValue('username', 'aaaaaaa');
     }
   }, [form, variant]);
 
   return (
-    <Card>
+    <Card className="max-w-[500px]">
       <CardHeader>
         <CardTitle>{variant === 'sign-in' ? 'Sign In' : 'Sign Up'}</CardTitle>
         <CardDescription>
@@ -127,19 +149,20 @@ const FormAuth: FunctionComponent<FormAuthProps> = ({ variant }) => {
             {variant === 'sign-up' && (
               <FormField
                 control={form.control}
-                name="name"
+                name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="shadcn"
+                        placeholder="@shadcn"
                         {...field}
                         disabled={isPending}
                       />
                     </FormControl>
                     <FormDescription>
-                      This is your public display name.
+                      Your username must be unique and contain at least 3
+                      characters.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -182,8 +205,9 @@ const FormAuth: FunctionComponent<FormAuthProps> = ({ variant }) => {
                     />
                   </FormControl>
                   <FormDescription>
-                    Use at least one lowercase letter, one numeral, and seven
-                    characters.
+                    Password must be at least 8 characters long, contain at
+                    least one uppercase letter, one lowercase letter, one
+                    number, and one special character.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

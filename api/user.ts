@@ -1,4 +1,5 @@
 import { formEditProfile } from '@/app/(main)/(user)/account/edit-profile/page';
+import { formPassword } from '@/app/(main)/(user)/account/password/page';
 import { User } from '@/types/user';
 import axios from 'axios';
 import { z } from 'zod';
@@ -53,6 +54,27 @@ export const updateUserAvatar = async ({
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/users/me/update-avatar`,
     formData,
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+  return null;
+};
+
+export const updateUserPassword = async ({
+  userId,
+  data,
+}: {
+  userId: string;
+  data: z.infer<typeof formPassword>;
+}) => {
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/me/update-password`,
+    data,
     {
       withCredentials: true,
     },
