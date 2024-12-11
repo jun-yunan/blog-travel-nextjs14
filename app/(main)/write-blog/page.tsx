@@ -78,7 +78,11 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
           className="w-[80%] flex flex-col items-center mx-auto h-[1500px]"
         >
           <DialogDraft />
-          <DialogPublish form={form} submitRef={submitRef} />
+          <DialogPublish
+            isPending={isPending}
+            form={form}
+            submitRef={submitRef}
+          />
           <div className="w-full">
             <FormField
               control={form.control}

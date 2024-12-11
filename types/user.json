@@ -1,15 +1,18 @@
 {
-  "_id": "6751a939d285de5f95eedf71",
-  "name": "Nguyễn Anh Kiệt",
-  "email": "nakiet-cntt16@tdu.edu.vn",
-  "password": "$2b$10$PnKFzlqMIp7brhbM0pbsxe.MzZ4AcJuYDa7UHoYhMd4OjaVkg2ZHC",
-  "role": "user",
-  "createdAt": "2024-12-05T13:23:05.186Z",
-  "updatedAt": "2024-12-08T17:43:59.886Z",
-  "__v": 0,
-  "username": "ffds",
-  "bio": "kkkkkkkkkkkkk",
-  "dateOfBirth": "2024-06-02T17:00:00.000Z",
-  "location": "sfsdfsdffdsfwacxz",
-  "personalWebsite": "fdssssssssssssssssss"
+  "title": "dsadadad",
+  "slug": "dsadadad",
+  "published": true,
+  "author": {
+    "$oid": "6757af2712833efda6339fe7"
+  },
+  "content": "{\"ops\":[{\"insert\":\"dasdad\"},{\"insert\":{\"image\":\"https://res.cloudinary.com/dyqfnpyto/image/upload/v1733842823/blogs/6757af2712833efda6339fe7-1733842822202-50c80110-560a-4608-8572-a784fa58a9dc_qtdso7.jpg\"}},{\"insert\":{\"image\":\"https://res.cloudinary.com/dyqfnpyto/image/upload/v1733842824/blogs/6757af2712833efda6339fe7-1733842822204-e11b117f-73c1-42fe-9a23-98a8e71e7d16_vqsnio.jpg\"}},{\"insert\":\"\\n\"}]}",
+  "tags": ["dsadad"],
+  "comments": [],
+  "createdAt": {
+    "$date": "2024-12-10T15:00:24.727Z"
+  },
+  "updatedAt": {
+    "$date": "2024-12-10T15:00:24.727Z"
+  },
+  "__v": 0
 }

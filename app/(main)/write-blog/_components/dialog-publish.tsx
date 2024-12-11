@@ -22,14 +22,29 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useBlogStore } from '@/hooks/useBlogStore';
+import { Loader2 } from 'lucide-react';
 import { RefObject } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 
 interface DialogPublishProps {
-  form: any;
+  isPending?: boolean;
+  form: UseFormReturn<
+    {
+      title: string;
+      content: string;
+      tags?: string[] | undefined;
+    },
+    unknown,
+    undefined
+  >;
   submitRef: RefObject<HTMLButtonElement>;
 }
 
-export function DialogPublish({ form, submitRef }: DialogPublishProps) {
+export function DialogPublish({
+  form,
+  submitRef,
+  isPending,
+}: DialogPublishProps) {
   const { openDialogPublish, setOpenDialogPublish, writeBlog } = useBlogStore();
   return (
     <Dialog open={openDialogPublish} onOpenChange={setOpenDialogPublish}>
@@ -57,6 +72,7 @@ export function DialogPublish({ form, submitRef }: DialogPublishProps) {
         </Card>
         <FormField
           control={form.control}
+          disabled={isPending}
           name="tags"
           render={({ field }) => (
             <FormItem>
@@ -77,7 +93,12 @@ export function DialogPublish({ form, submitRef }: DialogPublishProps) {
         />
 
         <DialogFooter>
-          <Button onClick={() => submitRef?.current?.click()}>Publish</Button>
+          <Button
+            disabled={isPending}
+            onClick={() => submitRef?.current?.click()}
+          >
+            {isPending ? <Loader2 className="animate-spin" /> : 'Publish'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

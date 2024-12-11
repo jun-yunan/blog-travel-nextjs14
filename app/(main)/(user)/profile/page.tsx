@@ -1,12 +1,20 @@
 'use client';
 
+import { getAllBlog } from '@/api/blog';
 import { getCurrentUser } from '@/api/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import { Loader2, UsersRound } from 'lucide-react';
 import Image from 'next/image';
 import { FunctionComponent } from 'react';
+import CardBlog from './_components/card-blog';
 
 interface ProfilePageProps {}
 
@@ -14,6 +22,16 @@ const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
   const { data: user } = useQuery({
     queryKey: ['currentUser', 'user'],
     queryFn: getCurrentUser,
+  });
+
+  const {
+    data: blogs,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
+    queryKey: ['currentUser', 'blogs'],
+    queryFn: getAllBlog,
   });
   return (
     <div className="w-[75%] h-[1500px]">
@@ -75,7 +93,20 @@ const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
             </CardContent>
           </Card>
         </div>
-        <Card className="w-[60%]"></Card>
+        <div className="w-[60%]">
+          {Array.isArray(blogs) && blogs && isSuccess ? (
+            blogs.map((blog) => <CardBlog key={blog._id} blog={blog} />)
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle></CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p>no blog</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </div>
     </div>
   );
