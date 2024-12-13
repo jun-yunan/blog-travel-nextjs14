@@ -14,11 +14,13 @@ import {
 } from '@/components/ui/popover';
 import { UseFormReturn } from 'react-hook-form';
 import { Label } from '@/components/ui/label';
+import { z } from 'zod';
+import { formEditProfile } from '../account/edit-profile/page';
 
 interface DatePickerProps {
   date: Date | undefined;
   setDate: React.Dispatch<React.SetStateAction<Date | undefined>>;
-  form: any;
+  form: UseFormReturn<z.infer<typeof formEditProfile>>;
   isLoading?: boolean;
 }
 
@@ -42,7 +44,11 @@ export function DatePicker({
             )}
           >
             <CalendarIcon />
-            {date ? format(date, 'PPP') : <span>Pick a date</span>}
+            {date ? (
+              format(date, 'PPP')
+            ) : (
+              <span className="text-sm">Pick a date</span>
+            )}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">

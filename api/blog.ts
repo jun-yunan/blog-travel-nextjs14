@@ -25,7 +25,7 @@ export const createBlog = async ({
   return null;
 };
 
-export const getAllBlog = async (): Promise<Blog[]> => {
+export const getAllBlog = async (): Promise<Blog[] | null> => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/blogs`,
@@ -38,9 +38,24 @@ export const getAllBlog = async (): Promise<Blog[]> => {
       return response.data;
     }
 
-    return [];
+    return null;
   } catch (error) {
     console.error(error);
-    return [];
+    return null;
   }
+};
+
+export const deleteBlogById = async ({ blogId }: { blogId: string }) => {
+  const response = await axios.delete(
+    `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+
+  return null;
 };

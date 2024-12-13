@@ -48,7 +48,7 @@ export function Account() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           {user?.imageUrl ? (
-            <Avatar className="w-[50px] h-[50px]">
+            <Avatar>
               <AvatarImage
                 className="object-cover"
                 src={user.imageUrl}
@@ -59,7 +59,7 @@ export function Account() {
               </AvatarFallback>
             </Avatar>
           ) : (
-            <Avatar className="w-[50px] h-[50px]">
+            <Avatar>
               <AvatarImage src="" alt={`@${user?.username}`} />
               <AvatarFallback>
                 <User />
@@ -68,7 +68,7 @@ export function Account() {
           )}
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuLabel>{user?.email || 'My Account'}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => router.push('/profile')}>
             <User />

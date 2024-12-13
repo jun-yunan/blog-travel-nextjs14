@@ -30,7 +30,7 @@ interface EditorProps {
       content: string;
       tags?: string[];
     },
-    any,
+    unknown,
     undefined
   >;
   onSubmit: ({ image, body }: EditorValue) => void;

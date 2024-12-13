@@ -9,11 +9,13 @@ import Link from 'next/link';
 
 import { ChevronLeft, PenLine } from 'lucide-react';
 import { useBlogStore } from '@/hooks/useBlogStore';
+import { useRouter } from 'next/navigation';
 
 interface HeaderWriteBlogProps {}
 
 const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
   const { user, isLoading } = useAuth();
+  const router = useRouter();
   const {
     setOpenDialogPublish,
     setWriteBlog,
@@ -25,13 +27,14 @@ const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
     <div className="fixed z-50 flex items-center justify-between px-12 w-full h-[75px]">
       <div className="flex items-center gap-x-2">
         <Logo />
-        <Link
-          href="/dashboard"
-          className="flex items-center text-base font-medium py-1 px-2 rounded-lg text-gray-700 hover:bg-gray-300 transition-all duration-300"
+        <Button
+          onClick={() => router.back()}
+          variant="ghost"
+          className="flex items-center text-sm text-muted-foreground font-medium rounded-full"
         >
           <ChevronLeft />
           <p>Back</p>
-        </Link>
+        </Button>
       </div>
       <div className="flex items-center">
         <div className="flex items-center gap-x-3">

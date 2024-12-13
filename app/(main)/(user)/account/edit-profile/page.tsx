@@ -32,8 +32,13 @@ interface EditProfileProps {}
 
 export const formEditProfile = z.object({
   name: z.string().max(50).optional(),
-  location: z.string().optional(),
-  bio: z.string().optional(),
+  location: z.string().max(300).optional(),
+  bio: z
+    .string()
+    .max(300, {
+      message: 'Bio must be less than 300 characters',
+    })
+    .optional(),
   personalWebsite: z.string().url().optional(),
   dateOfBirth: z.date().optional(),
 });
@@ -159,6 +164,12 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription>
+                    {form.getValues('name')?.length === 0
+                      ? '0'
+                      : form.getValues('name')?.length}
+                    /50 characters
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -178,6 +189,12 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription>
+                    {form.getValues('location')?.length === 0
+                      ? '0'
+                      : form.getValues('location')?.length}
+                    /300 characters
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -193,7 +210,11 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                     <Textarea placeholder="" {...field} rows={5} />
                   </FormControl>
                   <FormDescription>
-                    Brief description for your profile. URLs are hyperlinked.
+                    Briefly describe yourself in a few words.{' '}
+                    {form.getValues('bio')?.length === 0
+                      ? '0'
+                      : form.getValues('bio')?.length}
+                    /300 characters
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

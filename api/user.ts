@@ -85,3 +85,23 @@ export const updateUserPassword = async ({
   }
   return null;
 };
+
+export const checkUsername = async ({
+  username,
+  userId,
+}: {
+  username: string;
+  userId: string;
+}) => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/check-username?username=${username}&userId=${userId}`,
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+  return null;
+};
