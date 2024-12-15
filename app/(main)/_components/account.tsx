@@ -12,6 +12,7 @@ import {
   Settings,
   User,
   User2,
+  UserRound,
 } from 'lucide-react';
 
 import {
@@ -62,7 +63,7 @@ export function Account() {
             <Avatar>
               <AvatarImage src="" alt={`@${user?.username}`} />
               <AvatarFallback>
-                <User />
+                <UserRound />
               </AvatarFallback>
             </Avatar>
           )}
@@ -71,7 +72,7 @@ export function Account() {
           <DropdownMenuLabel>{user?.email || 'My Account'}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => router.push('/profile')}>
-            <User />
+            <UserRound />
             <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

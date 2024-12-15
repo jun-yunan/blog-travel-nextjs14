@@ -17,10 +17,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
-import { Blog } from '@/types/blog';
+import { Author, Blog } from '@/types/blog';
 import {
   Bookmark,
   EllipsisVertical,
+  Heart,
   Loader2,
   MessageCircle,
   PencilLine,
@@ -28,6 +29,7 @@ import {
   Share,
   ThumbsUp,
   Trash2,
+  UserRound,
 } from 'lucide-react';
 import { FunctionComponent } from 'react';
 import { useBlogStore } from '@/hooks/useBlogStore';
@@ -37,6 +39,7 @@ import DropdownMenuBlog from './dropdown-menu-blog';
 import { DialogDeleteBlog } from './dialog-delete-blog';
 import { HoverCardProfile } from '@/app/(main)/_components/hover-card-profile';
 import ButtonInteractBlog from './button-interact-blog';
+import Link from 'next/link';
 
 interface CardBlogProps {
   blog: Blog;
@@ -54,19 +57,33 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
       <Card className="w-full overflow-hidden flex flex-col">
         <div className="w-full flex items-center justify-between p-5">
           <div className="flex items-center gap-x-3">
-            <HoverCardProfile>
-              <Avatar className="w-[54px] h-[54px]">
-                <AvatarImage
-                  src={blog.author.imageUrl}
-                  className="object-cover hover:opacity-75 cursor-pointer"
-                />
-                <AvatarFallback>
-                  <Loader2 className="animate-spin" />
-                </AvatarFallback>
-              </Avatar>
+            <HoverCardProfile information={blog.author}>
+              {blog.author.imageUrl ? (
+                <Avatar className="w-[54px] h-[54px]">
+                  <AvatarImage
+                    src={blog.author.imageUrl}
+                    className="object-cover hover:opacity-75 cursor-pointer"
+                  />
+                  <AvatarFallback>
+                    <Loader2 className="animate-spin" />
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <Avatar className="w-[54px] h-[54px] hover:opacity-75 cursor-pointer">
+                  <AvatarImage className="object-cover " />
+                  <AvatarFallback>
+                    <UserRound />
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </HoverCardProfile>
             <div className="flex flex-col items-start gap-y-1">
-              <p className="text-base font-semibold">{blog.author.username}</p>
+              <Link
+                href={`/${blog.author.username}`}
+                className="text-base hover:underline font-semibold"
+              >
+                {blog.author.username}
+              </Link>
               <p className="text-sm text-muted-foreground">
                 {format(new Date(blog.createdAt), 'dd-MM-yyyy HH:mm')}
               </p>
@@ -84,7 +101,7 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
         </CardContent>
         <div className="w-full flex items-center justify-between px-4 py-1">
           <Button variant="ghost" className="text-base rounded-full">
-            <ThumbsUp />
+            <Heart />
             <p>12</p>
           </Button>
           <div className="flex items-center gap-x-3">
@@ -101,7 +118,7 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
         <Separator className="w-full" />
         <div className="w-full py-2 flex items-center justify-around">
           <ButtonInteractBlog label="Like" onClick={() => {}}>
-            <ThumbsUp />
+            <Heart />
           </ButtonInteractBlog>
           <ButtonInteractBlog label="Comment" onClick={() => {}}>
             <MessageCircle />

@@ -1,15 +1,41 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useRef } from 'react';
 import Logo from './logo';
+import useFooterStore from '@/store/footerStore';
 
 interface FooterProps {}
 
 const Footer: FunctionComponent<FooterProps> = () => {
+  const setFooterVisible = useFooterStore((state) => state.setFooterVisible);
+  const footerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setFooterVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 },
+    );
+
+    const currentFooterRef = footerRef.current;
+
+    if (currentFooterRef) observer.observe(currentFooterRef);
+
+    return () => {
+      if (currentFooterRef) observer.disconnect();
+    };
+  }, [setFooterVisible]);
+
   return (
-    <div className="w-full h-[766px] bg-yellow-300 flex-shrink-0 flex flex-col items-center">
+    <footer
+      ref={footerRef}
+      className="w-full h-[766px] bg-yellow-300 flex-shrink-0 flex flex-col items-center"
+    >
       <div className="relative w-[80%] h-[50%]">
         <Image
           src="/images/pexels-pixabay-416024.jpg"
@@ -144,7 +170,7 @@ const Footer: FunctionComponent<FooterProps> = () => {
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

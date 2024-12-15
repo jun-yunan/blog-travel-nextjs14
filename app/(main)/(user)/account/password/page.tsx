@@ -141,18 +141,24 @@ const PasswordPage: FunctionComponent<PasswordPageProps> = () => {
               </FormItem>
             )}
           />
-          <Button
-            disabled={isPending}
-            className="self-end"
-            size="lg"
-            type="submit"
-          >
-            {isPending ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              'Update Password'
-            )}
-          </Button>
+          <div className="w-full flex items-center justify-end gap-x-4">
+            <Button
+              disabled={isPending}
+              className="rounded-full"
+              type="button"
+              variant="ghost"
+              onClick={() => form.reset()}
+            >
+              Cancel
+            </Button>
+            <Button disabled={isPending} className="rounded-full" type="submit">
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                'Update Password'
+              )}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

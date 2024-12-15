@@ -15,7 +15,9 @@ const LayoutMain: FunctionComponent<LayoutMainProps> = ({ children }) => {
   return (
     <div className="w-full h-full flex flex-col items-center">
       {pathname === '/write-blog' ? <HeaderWriteBlog /> : <Header />}
-      <main className="w-full mt-[75px]">{children}</main>
+      <main className="w-full mt-[75px] flex flex-col items-center">
+        {children}
+      </main>
       <Footer />
     </div>
   );

@@ -25,10 +25,10 @@ export const createBlog = async ({
   return null;
 };
 
-export const getAllBlog = async (): Promise<Blog[] | null> => {
+export const getAllBlogByUser = async (): Promise<Blog[] | null> => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/blogs`,
+      `${process.env.NEXT_PUBLIC_API_URL}/users/me/blogs`,
       {
         withCredentials: true,
       },
@@ -58,4 +58,71 @@ export const deleteBlogById = async ({ blogId }: { blogId: string }) => {
   }
 
   return null;
+};
+
+export const getAllBlog = async (): Promise<Blog[] | null> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/blogs`,
+      {
+        withCredentials: true,
+      },
+    );
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const getBlogById = async ({
+  blogId,
+}: {
+  blogId: string;
+}): Promise<Blog | null> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
+      {
+        withCredentials: true,
+      },
+    );
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const getAllBlogByAuthor = async ({
+  authorId,
+}: {
+  authorId: string;
+}): Promise<Blog[] | null> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/blogs/${authorId}`,
+      {
+        withCredentials: true,
+      },
+    );
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    }
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };

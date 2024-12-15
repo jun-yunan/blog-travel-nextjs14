@@ -4,7 +4,7 @@ import { FunctionComponent, useEffect } from 'react';
 import SidebarSettings from '../_components/sidebar-settings';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePathname } from 'next/navigation';
-import { Crown, Loader2, User } from 'lucide-react';
+import { Crown, Loader2, User, UserRound } from 'lucide-react';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/api/user';
@@ -53,7 +53,7 @@ const LayoutSettings: FunctionComponent<LayoutSettingsProps> = ({
               <AvatarImage src="" alt={`@${currentUser?.username}`} />
               <AvatarFallback>
                 {/* <Loader2 className="animate-spin" /> */}
-                <User />
+                <UserRound />
               </AvatarFallback>
             </Avatar>
           )}

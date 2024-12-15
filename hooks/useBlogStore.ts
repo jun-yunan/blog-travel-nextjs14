@@ -13,6 +13,8 @@ type BlogStore = {
   writeBlog: WriteBlog;
   openDialogDelete: boolean;
   openDropdownMenu: boolean;
+  openSheetComments?: boolean;
+  setOpenSheetComments: (open: boolean) => void;
   setOpenDropdownMenu: (open: boolean) => void;
   setOpenDialogDelete: (open: boolean) => void;
   setOpenDialogPublish: (open: boolean) => void;
@@ -25,12 +27,14 @@ export const useBlogStore = create<BlogStore>((set) => ({
   openDialogDraft: false,
   openDialogDelete: false,
   openDropdownMenu: false,
+  openSheetComments: false,
   writeBlog: {
     title: '',
     content: '',
     tags: [],
     published: false,
   },
+  setOpenSheetComments: (open) => set({ openSheetComments: open }),
   setOpenDialogPublish: (open) => set({ openDialogPublish: open }),
   setOpenDialogDraft: (open) => set({ openDialogDraft: open }),
   setWriteBlog: (writeBlog: WriteBlog) =>

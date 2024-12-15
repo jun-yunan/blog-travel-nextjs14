@@ -14,62 +14,36 @@ import { MdSend } from 'react-icons/md';
 import { ImageIcon, Smile, XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
-import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 import { EmojiPopover } from './emoji-popover';
-import { useBlogStore } from '@/hooks/useBlogStore';
+// import { EmojiPopover } from '../write-blog/_components/emoji-popover';
 
 type EditorValue = {
   image: File | null;
   body: string;
 };
 
-interface EditorProps {
-  form: UseFormReturn<
-    {
-      title: string;
-      content: string;
-      tags?: string[];
-    },
-    unknown,
-    undefined
-  >;
+interface CommentFieldProps {
+  innerRef?: MutableRefObject<Quill | null>;
   onSubmit: ({ image, body }: EditorValue) => void;
-  onCancel?: () => void;
-  placeholder?: string;
   defaultValue?: Delta | Op[];
   disabled?: boolean;
-  innerRef?: MutableRefObject<Quill | null>;
-  variant?: 'create' | 'update';
-  field?: ControllerRenderProps<
-    {
-      title: string;
-      author: string;
-      content: string;
-    },
-    'content'
-  >;
+  placeholder?: string;
 }
 
-const Editor = ({
-  variant = 'create',
+const CommentField = ({
+  innerRef,
   onSubmit,
   defaultValue = [],
   disabled = false,
-  innerRef,
-  onCancel,
-  field,
-  placeholder = 'Write something...',
-  form,
-}: EditorProps) => {
-  const [text, setText] = React.useState('');
+  placeholder = 'Write a comment...',
+}: CommentFieldProps) => {
+  const [text, setText] = useState('');
 
   const [image, setImage] = useState<File | null>(null);
 
-  const [isToolbarVisible, setIsToolbarVisible] = React.useState(false);
+  const [isToolbarVisible, setIsToolbarVisible] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const { setWriteBlog } = useBlogStore();
 
   const submitRef = useRef(onSubmit);
   const placeholderRef = useRef(placeholder);
@@ -98,47 +72,34 @@ const Editor = ({
       placeholder: placeholderRef.current,
       modules: {
         toolbar: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
           ['bold', 'italic', 'underline', 'strike'],
           ['blockquote', 'code-block'],
-          ['link', 'image'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          ['clean'],
+          ['link'],
         ],
-        // imageResize: {
-        //   modules: ['Resize', 'DisplaySize', 'Toolbar'], // Tùy chọn resize
-        // },
         keyboard: {
           bindings: {
-            // enter: {
-            //   key: 'Enter',
-            //   shiftKey: false,
-            //   handler: () => {
-            //     quill.insertText(quill.getSelection()?.index || 0, '\n');
-            //   },
-            // },
-            // enter: {
-            //   key: 'Enter',
-            //   handler: () => {
-            //     const text = quill.getText();
-            //     const addedImage = imageElementRef.current?.files?.[0] || null;
-            //     const isEmpty =
-            //       !addedImage &&
-            //       text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
-            //     if (isEmpty) {
-            //       return;
-            //     }
-            //     const body = JSON.stringify(quill.getContents());
-            //     submitRef.current?.({ body, image: addedImage });
-            //   },
-            // },
-            // shift_enter: {
-            //   key: 'Enter',
-            //   shiftKey: true,
-            //   handler: () => {
-            //     quill.insertText(quill.getSelection()?.index || 0, '\n');
-            //   },
-            // },
+            enter: {
+              key: 'Enter',
+              handler: () => {
+                const text = quill.getText();
+                const addedImage = imageElementRef.current?.files?.[0] || null;
+                const isEmpty =
+                  !addedImage &&
+                  text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
+                if (isEmpty) {
+                  return;
+                }
+                const body = JSON.stringify(quill.getContents());
+                submitRef.current?.({ body, image: addedImage });
+              },
+            },
+            shift_enter: {
+              key: 'Enter',
+              shiftKey: true,
+              handler: () => {
+                quill.insertText(quill.getSelection()?.index || 0, '\n');
+              },
+            },
           },
         },
       },
@@ -157,11 +118,6 @@ const Editor = ({
 
     quill.on(Quill.events.TEXT_CHANGE, () => {
       setText(quill.getText());
-      console.log(quill.getContents());
-      // console.log(quill.root.innerHTML);
-      setWriteBlog({ content: quill.root.innerHTML });
-      // form.setValue('content', quill.root.innerHTML);
-      form.setValue('content', JSON.stringify(quill.getContents()));
     });
 
     return () => {
@@ -177,7 +133,6 @@ const Editor = ({
       }
     };
   }, [innerRef]);
-
   const toggleToolbar = () => {
     setIsToolbarVisible((prev) => !prev);
     const toolbarElement = containerRef.current?.querySelector('.ql-toolbar');
@@ -187,15 +142,15 @@ const Editor = ({
     }
   };
 
-  const isEmpty = !image && text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
-
   const onEmojiSelect = (emoji: { native: string }) => {
     const quill = quillRef.current;
     quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
   };
 
+  const isEmpty = !image && text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
+
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col">
       <input
         type="file"
         accept="image/*"
@@ -205,16 +160,12 @@ const Editor = ({
       />
       <div
         className={cn(
-          'flex flex-col h-full w-full border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white',
+          'flex flex-col border border-slate-200 rounded-md overflow-hidden focus-within:border-slate-300 focus-within:shadow-sm transition bg-white',
           disabled && 'opacity-50',
         )}
       >
-        {/* <div id="toolbar">
-          <button className="ql-undo">Undo</button>
-          <button className="ql-redo">Redo</button>
-        </div> */}
         <div ref={containerRef} className="h-full ql-custom" />
-        {/* {!!image && (
+        {!!image && (
           <div className="p-2">
             <div className="relative size-[62px] flex items-center justify-center group/image">
               <button
@@ -235,13 +186,12 @@ const Editor = ({
               />
             </div>
           </div>
-        )} */}
+        )}
         <div className="flex px-2 pb-2 z-[5]">
           <Button
             disabled={disabled}
             size="icon"
             variant="ghost"
-            type="button"
             onClick={toggleToolbar}
           >
             <PiTextAa className="size-4" />
@@ -257,17 +207,17 @@ const Editor = ({
               <Smile className="size-4" />
             </Button>
           </EmojiPopover>
-          {variant === 'create' && (
-            <Button
-              disabled={false}
-              size="icon"
-              variant="ghost"
-              type="button"
-              onClick={() => imageElementRef.current?.click()}
-            >
-              <ImageIcon className="size-4" />
-            </Button>
-          )}
+
+          <Button
+            disabled={false}
+            size="icon"
+            variant="ghost"
+            type="button"
+            onClick={() => imageElementRef.current?.click()}
+          >
+            <ImageIcon className="size-4" />
+          </Button>
+
           <Button
             disabled={disabled || isEmpty}
             onClick={() => {
@@ -289,8 +239,13 @@ const Editor = ({
           </Button>
         </div>
       </div>
+      <div className="p-2 text-[10px] text-muted-foreground flex justify-end">
+        <p>
+          <strong>Shift + Return</strong> to add a new line
+        </p>
+      </div>
     </div>
   );
 };
 
-export default Editor;
+export default CommentField;

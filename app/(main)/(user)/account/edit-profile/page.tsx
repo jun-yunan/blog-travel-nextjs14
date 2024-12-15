@@ -23,7 +23,7 @@ import { isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/providers/tanstack-query-provider';
-import { CloudUpload, Loader2, Trash2, User } from 'lucide-react';
+import { CloudUpload, Loader2, Trash2, User, UserRound } from 'lucide-react';
 import { DialogUploadImage } from '../../_components/dialog-upload-image';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -67,7 +67,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
     },
     onError(error, variables, context) {
       if (isAxiosError(error)) {
-        toast.error(error.response?.data.message);
+        toast.error(error.response?.data.message || error.response?.data);
       } else {
         toast.error('An error occurred. Please try again.');
       }
@@ -128,7 +128,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
               />
               <AvatarFallback>
                 {/* <Loader2 className="animate-spin" /> */}
-                <User />
+                <UserRound />
               </AvatarFallback>
             </Avatar>
           )}
@@ -248,9 +248,37 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
               setDate={setDate}
               form={form}
             />
-            <Button disabled={isPending} className="mt-6 rounded-full self-end">
-              Save Profile
-            </Button>
+            <div className="mt-6 w-full flex justify-end gap-x-4">
+              <Button
+                type="button"
+                disabled={isPending}
+                className="rounded-full"
+                variant="ghost"
+                onClick={() => {
+                  if (user) {
+                    form.setValue('bio', user.bio);
+                    form.setValue('dateOfBirth', user.dateOfBirth);
+                    form.setValue('location', user.location);
+                    form.setValue('name', user.name);
+                    form.setValue('personalWebsite', user.personalWebsite);
+                    setDate(user.dateOfBirth);
+                  }
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="rounded-full"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  'Save Profile'
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

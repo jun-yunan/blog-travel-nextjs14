@@ -1,11 +1,17 @@
 'use client';
 
-import { getAllBlog } from '@/api/blog';
+import { getAllBlogByUser } from '@/api/blog';
 import { getCurrentUser } from '@/api/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, PencilLine, UserRoundPen, UsersRound } from 'lucide-react';
+import {
+  Loader2,
+  PencilLine,
+  UserRound,
+  UserRoundPen,
+  UsersRound,
+} from 'lucide-react';
 import Image from 'next/image';
 import { FunctionComponent } from 'react';
 import CardBlog from './_components/card-blog';
@@ -31,11 +37,11 @@ const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
     isSuccess,
   } = useQuery({
     queryKey: ['currentUser', 'blogs'],
-    queryFn: getAllBlog,
+    queryFn: getAllBlogByUser,
   });
   return (
     <>
-      <div className="w-[70%]">
+      <div className="w-[70%] mb-10">
         <Card className="w-full overflow-hidden flex flex-col items-start gap-y-10">
           <div className="relative w-full h-[300px]">
             <Image
@@ -61,7 +67,7 @@ const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
                 <Avatar className="w-[150px] h-[150px]">
                   <AvatarImage className="object-cover" />
                   <AvatarFallback>
-                    <Loader2 className="animate-spin" />
+                    <UserRound />
                   </AvatarFallback>
                 </Avatar>
               )}

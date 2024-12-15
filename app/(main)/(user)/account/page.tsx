@@ -136,6 +136,10 @@ const SettingsPage: FunctionComponent<SettingsPageProps> = () => {
         userId: currentUser?._id,
       });
     }
+
+    return () => {
+      setError(null);
+    };
   }, [currentUser, username]);
 
   return (
