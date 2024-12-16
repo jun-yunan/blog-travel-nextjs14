@@ -21,11 +21,9 @@ import { getCurrentUser, updateProfileUserById } from '@/api/user';
 import { useUserStore } from '@/hooks/useUserStore';
 import { isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
-import { useAuth } from '@/hooks/useAuth';
 import { queryClient } from '@/providers/tanstack-query-provider';
-import { CloudUpload, Loader2, Trash2, User, UserRound } from 'lucide-react';
+import { CloudUpload, Loader2, Trash2, UserRound } from 'lucide-react';
 import { DialogUploadImage } from '../../_components/dialog-upload-image';
-import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface EditProfileProps {}
@@ -65,7 +63,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
       toast.success('Profile updated successfully.');
       queryClient.invalidateQueries({ queryKey: ['currentUser', 'user'] });
     },
-    onError(error, variables, context) {
+    onError(error) {
       if (isAxiosError(error)) {
         toast.error(error.response?.data.message || error.response?.data);
       } else {
@@ -127,7 +125,6 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                 alt={`@${user?.username}`}
               />
               <AvatarFallback>
-                {/* <Loader2 className="animate-spin" /> */}
                 <UserRound />
               </AvatarFallback>
             </Avatar>

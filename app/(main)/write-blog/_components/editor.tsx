@@ -177,7 +177,7 @@ const Editor = ({
         innerRef.current = null;
       }
     };
-  }, [innerRef]);
+  }, [form, innerRef, setWriteBlog]);
 
   const toggleToolbar = () => {
     setIsToolbarVisible((prev) => !prev);
