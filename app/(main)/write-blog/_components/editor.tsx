@@ -15,8 +15,9 @@ import { ImageIcon, Smile, XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
-import { EmojiPopover } from './emoji-popover';
+// import { EmojiPopover } from './emoji-popover';
 import { useBlogStore } from '@/hooks/useBlogStore';
+import { EmojiPopover } from '../../_components/emoji-popover';
 
 type EditorValue = {
   image: File | null;

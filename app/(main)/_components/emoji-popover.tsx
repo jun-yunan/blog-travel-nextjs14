@@ -17,7 +17,12 @@ import data from '@emoji-mart/data';
 interface EmojiPopoverProps {
   children: ReactNode;
   hint?: string;
-  onEmojiSelect: (emoji: any) => void;
+  onEmojiSelect: (emoji: {
+    id: string;
+    name: string;
+    native: string;
+    unified: string;
+  }) => void;
 }
 
 export const EmojiPopover = ({
@@ -28,7 +33,12 @@ export const EmojiPopover = ({
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
-  const onSelect = (emoji: any) => {
+  const onSelect = (emoji: {
+    id: string;
+    name: string;
+    native: string;
+    unified: string;
+  }) => {
     onEmojiSelect(emoji);
     setPopoverOpen(false);
 
