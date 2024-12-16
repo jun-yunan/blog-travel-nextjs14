@@ -6,17 +6,21 @@ import { FunctionComponent } from 'react';
 
 import { format } from 'date-fns';
 import Link from 'next/link';
-import Renderer from './renderer';
+// import Renderer from './renderer';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
-import { getCurrentUser } from '@/api/user';
+
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
 interface CommentItemProps {
   comment: Comment;
   isAuthorComment?: boolean;
 }
+
+const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
+  ssr: false,
+});
 
 const CommentItem: FunctionComponent<CommentItemProps> = ({
   comment,

@@ -17,7 +17,6 @@ import {
   Share,
 } from 'lucide-react';
 import { FunctionComponent, useEffect } from 'react';
-import Renderer from '../../_components/renderer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { HoverCardProfile } from '../../_components/hover-card-profile';
@@ -36,12 +35,17 @@ import { getCurrentUser } from '@/api/user';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { queryClient } from '@/providers/tanstack-query-provider';
+import dynamic from 'next/dynamic';
 
 interface BlogDetailsProps {
   params: {
     blogId: string;
   };
 }
+
+const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
+  ssr: false,
+});
 
 const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
   const isFooterVisible = useFooterStore((state) => state.isFooterVisible);

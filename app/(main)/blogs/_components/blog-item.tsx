@@ -12,13 +12,17 @@ import {
   Share,
   ThumbsUp,
 } from 'lucide-react';
-import Renderer from '../../_components/renderer';
 import ButtonInteractBlog from '../../(user)/profile/_components/button-interact-blog';
 import { Separator } from '@/components/ui/separator';
+import dynamic from 'next/dynamic';
 
 interface BlogItemProps {
   blog: Blog;
 }
+
+const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
+  ssr: false,
+});
 
 const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
   return (
