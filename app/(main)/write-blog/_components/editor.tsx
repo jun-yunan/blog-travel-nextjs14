@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   MutableRefObject,
   useEffect,
@@ -18,6 +20,9 @@ import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 // import { EmojiPopover } from './emoji-popover';
 import { useBlogStore } from '@/hooks/useBlogStore';
 import { EmojiPopover } from '../../_components/emoji-popover';
+import dynamic from 'next/dynamic';
+
+// const Quill = dynamic(() => import('quill'), { ssr: false });
 
 type EditorValue = {
   image: File | null;
