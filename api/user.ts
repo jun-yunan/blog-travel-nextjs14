@@ -1,5 +1,4 @@
-import { formEditProfile } from '@/app/(main)/(user)/account/edit-profile/page';
-import { formPassword } from '@/app/(main)/(user)/account/password/page';
+import { formEditProfile, formPassword } from '@/schema/form';
 import { User } from '@/types/user';
 import axios from 'axios';
 import { z } from 'zod';

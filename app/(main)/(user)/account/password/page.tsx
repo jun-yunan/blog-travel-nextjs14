@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useUserStore } from '@/hooks/useUserStore';
+import { formPassword } from '@/schema/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -23,37 +24,6 @@ import { toast } from 'react-toastify';
 import { z } from 'zod';
 
 interface PasswordPageProps {}
-
-export const formPassword = z.object({
-  oldPassword: z
-    .string()
-    .min(8, { message: 'Password must be at least 8 characters long' })
-    .max(50, { message: 'Password must not exceed 50 characters' })
-    .regex(/[A-Z]/, {
-      message: 'Password must contain at least one uppercase letter',
-    })
-    .regex(/[a-z]/, {
-      message: 'Password must contain at least one lowercase letter',
-    })
-    .regex(/[0-9]/, { message: 'Password must contain at least one number' })
-    .regex(/[@$!%*?&#^()-_=+]/, {
-      message: 'Password must contain at least one special character',
-    }),
-  newPassword: z
-    .string()
-    .min(8, { message: 'Password must be at least 8 characters long' })
-    .max(50, { message: 'Password must not exceed 50 characters' })
-    .regex(/[A-Z]/, {
-      message: 'Password must contain at least one uppercase letter',
-    })
-    .regex(/[a-z]/, {
-      message: 'Password must contain at least one lowercase letter',
-    })
-    .regex(/[0-9]/, { message: 'Password must contain at least one number' })
-    .regex(/[@$!%*?&#^()-_=+]/, {
-      message: 'Password must contain at least one special character',
-    }),
-});
 
 const PasswordPage: FunctionComponent<PasswordPageProps> = () => {
   const form = useForm<z.infer<typeof formPassword>>({

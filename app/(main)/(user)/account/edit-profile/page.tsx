@@ -25,21 +25,9 @@ import { queryClient } from '@/providers/tanstack-query-provider';
 import { CloudUpload, Loader2, Trash2, UserRound } from 'lucide-react';
 import { DialogUploadImage } from '../../_components/dialog-upload-image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { formEditProfile } from '@/schema/form';
 
 interface EditProfileProps {}
-
-export const formEditProfile = z.object({
-  name: z.string().max(50).optional(),
-  location: z.string().max(300).optional(),
-  bio: z
-    .string()
-    .max(300, {
-      message: 'Bio must be less than 300 characters',
-    })
-    .optional(),
-  personalWebsite: z.string().url().optional(),
-  dateOfBirth: z.date().optional(),
-});
 
 const EditProfile: FunctionComponent<EditProfileProps> = () => {
   const [date, setDate] = useState<Date>();
