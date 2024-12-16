@@ -1,38 +1,19 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
+
 import { Separator } from '@/components/ui/separator';
-import { Author, Blog } from '@/types/blog';
+import { Blog } from '@/types/blog';
 import {
-  Bookmark,
   EllipsisVertical,
   Heart,
   Loader2,
   MessageCircle,
-  PencilLine,
-  Pin,
   Share,
-  ThumbsUp,
-  Trash2,
   UserRound,
 } from 'lucide-react';
 import { FunctionComponent } from 'react';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import dynamic from 'next/dynamic';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import DropdownMenuBlog from './dropdown-menu-blog';

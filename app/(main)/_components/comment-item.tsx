@@ -6,7 +6,6 @@ import { FunctionComponent } from 'react';
 
 import { format } from 'date-fns';
 import Link from 'next/link';
-// import Renderer from './renderer';
 import { Button } from '@/components/ui/button';
 
 import { Badge } from '@/components/ui/badge';
