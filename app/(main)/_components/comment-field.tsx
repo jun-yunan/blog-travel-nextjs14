@@ -11,23 +11,24 @@ import 'quill/dist/quill.snow.css';
 import { Button } from '@/components/ui/button';
 import { PiTextAa } from 'react-icons/pi';
 import { MdSend } from 'react-icons/md';
-import { ImageIcon, Smile, XIcon } from 'lucide-react';
+import { ImageIcon, Loader2, Smile, XIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { EmojiPopover } from './emoji-popover';
 // import { EmojiPopover } from '../write-blog/_components/emoji-popover';
 
-type EditorValue = {
+export type EditorValue = {
   image: File | null;
-  body: string;
+  content: string;
 };
 
 interface CommentFieldProps {
   innerRef?: MutableRefObject<Quill | null>;
-  onSubmit: ({ image, body }: EditorValue) => void;
+  onSubmit: ({ image, content }: EditorValue) => void;
   defaultValue?: Delta | Op[];
   disabled?: boolean;
   placeholder?: string;
+  isSended?: boolean;
 }
 
 const CommentField = ({
@@ -35,6 +36,7 @@ const CommentField = ({
   onSubmit,
   defaultValue = [],
   disabled = false,
+  isSended = false,
   placeholder = 'Write a comment...',
 }: CommentFieldProps) => {
   const [text, setText] = useState('');
@@ -89,8 +91,8 @@ const CommentField = ({
                 if (isEmpty) {
                   return;
                 }
-                const body = JSON.stringify(quill.getContents());
-                submitRef.current?.({ body, image: addedImage });
+                const content = JSON.stringify(quill.getContents());
+                submitRef.current?.({ content, image: addedImage });
               },
             },
             shift_enter: {
@@ -132,7 +134,7 @@ const CommentField = ({
         innerRef.current = null;
       }
     };
-  }, [innerRef]);
+  }, [innerRef, isSended]);
   const toggleToolbar = () => {
     setIsToolbarVisible((prev) => !prev);
     const toolbarElement = containerRef.current?.querySelector('.ql-toolbar');
@@ -150,7 +152,7 @@ const CommentField = ({
   const isEmpty = !image && text.replace(/<(.|\n)*?>/g, '').trim().length === 0;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col flex-shrink-0">
       <input
         type="file"
         accept="image/*"
@@ -197,13 +199,7 @@ const CommentField = ({
             <PiTextAa className="size-4" />
           </Button>
           <EmojiPopover onEmojiSelect={onEmojiSelect}>
-            <Button
-              disabled={false}
-              size="icon"
-              variant="ghost"
-              type="button"
-              //   onClick={() => {}}
-            >
+            <Button disabled={false} size="icon" variant="ghost" type="button">
               <Smile className="size-4" />
             </Button>
           </EmojiPopover>
@@ -222,7 +218,7 @@ const CommentField = ({
             disabled={disabled || isEmpty}
             onClick={() => {
               onSubmit({
-                body: JSON.stringify(quillRef.current?.getContents()),
+                content: JSON.stringify(quillRef.current?.getContents()),
                 image,
               });
             }}
@@ -235,7 +231,11 @@ const CommentField = ({
                 : ' bg-[#007a5a] hover:bg-[#007a5a]/80 text-white',
             )}
           >
-            <MdSend className="size-4" />
+            {disabled ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <MdSend className="size-4" />
+            )}
           </Button>
         </div>
       </div>

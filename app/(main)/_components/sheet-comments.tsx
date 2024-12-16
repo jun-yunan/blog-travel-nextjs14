@@ -1,46 +1,82 @@
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { useBlogStore } from '@/hooks/useBlogStore';
-import { Comment } from '@/types/blog';
-import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import CommentField from './comment-field';
-import Editor from '../write-blog/_components/editor';
+import { Comment } from '@/types/comment';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import CommentField, { EditorValue } from './comment-field';
+import { useMutation } from '@tanstack/react-query';
+import { createComment } from '@/api/comment';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { queryClient } from '@/providers/tanstack-query-provider';
+import CommentItem from './comment-item';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Author } from '@/types/blog';
+import { User } from '@/types/user';
 
 interface SheetCommentsProps {
   children?: React.ReactNode;
   comments: Comment[];
+  blogId: string;
+  author: Author;
+  user: User;
 }
 
-const formComments = z.object({
-  content: z.string(),
-});
+export function SheetComments({
+  children,
+  comments,
+  blogId,
+  author,
+  user,
+}: SheetCommentsProps) {
+  const { openSheetComments, setOpenSheetComments } = useBlogStore();
 
-export function SheetComments({ children, comments }: SheetCommentsProps) {
-  const form = useForm<z.infer<typeof formComments>>({
-    defaultValues: {
-      content: '',
+  const commentEndRef = useRef<HTMLDivElement>(null);
+
+  const {
+    mutate: mutationCreateComment,
+    isPending,
+    isError,
+    isSuccess,
+  } = useMutation({
+    mutationKey: ['comments', 'create'],
+    mutationFn: createComment,
+    onError(error, variables, context) {
+      console.log(error);
+
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || error.response?.data);
+      } else {
+        toast.error('An error occurred. Please try again later.');
+      }
     },
-    resolver: zodResolver(formComments),
+    onSuccess(data, variables, context) {
+      // toast.success('Comment created successfully.');
+      queryClient.invalidateQueries({ queryKey: ['blog', blogId] });
+    },
   });
 
-  const onSubmit = async (data: z.infer<typeof formComments>) => {};
+  const onSubmit = async (data: EditorValue) => {
+    console.log(data);
 
-  const { openSheetComments, setOpenSheetComments } = useBlogStore();
+    mutationCreateComment({ data, blogId });
+  };
+
+  const scrollToBottom = () => {
+    commentEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [comments]);
 
   return (
     <Sheet open={openSheetComments} onOpenChange={setOpenSheetComments}>
@@ -53,24 +89,25 @@ export function SheetComments({ children, comments }: SheetCommentsProps) {
             readers.
           </SheetDescription>
         </SheetHeader>
-        <Card className="flex flex-col items-start gap-y-4 w-full min-h-[100px] p-4">
+        <Card className="w-full max-h-[324px] p-4">
           {comments.length === 0 ? (
             <div>
               <p>No comments yet.</p>
             </div>
           ) : (
-            comments.map((comment) => (
-              <div key={comment._id}>
-                <p>{comment.content}</p>
-              </div>
-            ))
+            <ScrollArea className="w-full h-full flex flex-col items-start gap-y-10">
+              {comments.map((comment) => (
+                <CommentItem
+                  key={comment._id}
+                  isAuthorComment={user._id === author._id}
+                  comment={comment}
+                />
+              ))}
+              <div ref={commentEndRef} />
+            </ScrollArea>
           )}
         </Card>
-        <CommentField onSubmit={() => {}} />
-        {/* <Card className="w-full">
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-          </form>
-        </Card> */}
+        <CommentField disabled={isPending} onSubmit={onSubmit} />
       </SheetContent>
     </Sheet>
   );

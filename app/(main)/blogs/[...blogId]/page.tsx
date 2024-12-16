@@ -1,6 +1,13 @@
 'use client';
-import { getAllBlogByAuthor, getBlogById } from '@/api/blog';
-import { useQuery } from '@tanstack/react-query';
+import {
+  getAllBlogByAuthor,
+  getBlogById,
+  getBlogByTag,
+  likeBlog,
+  unlikeBlog,
+} from '@/api/blog';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { FaHeart } from 'react-icons/fa';
 import {
   Bookmark,
   Heart,
@@ -8,13 +15,11 @@ import {
   MessageCircle,
   MoreVertical,
   Share,
-  ThumbsUp,
 } from 'lucide-react';
 import { FunctionComponent, useEffect } from 'react';
 import Renderer from '../../_components/renderer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { HoverCard } from '@radix-ui/react-hover-card';
 import { HoverCardProfile } from '../../_components/hover-card-profile';
 import Link from 'next/link';
 import ButtonInteractBlog from '../../(user)/profile/_components/button-interact-blog';
@@ -27,6 +32,10 @@ import useFooterStore from '@/store/footerStore';
 import { cn } from '@/lib/utils';
 import { SheetComments } from '../../_components/sheet-comments';
 import { useBlogStore } from '@/hooks/useBlogStore';
+import { getCurrentUser } from '@/api/user';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { queryClient } from '@/providers/tanstack-query-provider';
 
 interface BlogDetailsProps {
   params: {
@@ -55,15 +64,56 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
     enabled: !!blog?.author._id,
   });
 
-  // const { data: blogsByTag} = useQuery({
-  //   queryKey: ['blogs-by-tag', blog?.tags],
-  //   queryFn: () => getAllBlogByTag({ tag: blog?.tags || '' }),
-  //   enabled: !!blog?.tags,
-  // })
+  const { data: currentUser } = useQuery({
+    queryKey: ['currentUser', 'user'],
+    queryFn: getCurrentUser,
+  });
+
+  const { data: blogsByTag } = useQuery({
+    queryKey: ['blogs-by-tag', blog?.tags],
+    queryFn: () => getBlogByTag({ tags: blog?.tags || [] }),
+    enabled: !!blog?.tags,
+  });
+
+  const { mutate: mutationLikeBlog, isSuccess: isLiked } = useMutation({
+    mutationKey: ['like', blog?._id],
+    mutationFn: likeBlog,
+    onSuccess: () => {
+      toast.success('Liked blog successfully');
+      queryClient.invalidateQueries({
+        queryKey: ['blog', params.blogId],
+      });
+    },
+    onError(error, variables, context) {
+      console.log(error);
+
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data.message || error.response?.data);
+      } else {
+        toast.error('An error occurred. Please try again later');
+      }
+    },
+  });
+
+  const {} = useMutation({
+    mutationKey: ['unlike', blog?._id],
+    mutationFn: unlikeBlog,
+  });
+
+  const handleLikeBlog = () => {
+    if (blog) mutationLikeBlog({ blogId: blog._id });
+  };
 
   return (
     <>
-      {blog && <SheetComments comments={blog.comments} />}
+      {blog && currentUser && (
+        <SheetComments
+          blogId={params.blogId}
+          comments={blog.comments}
+          author={blog.author}
+          user={currentUser}
+        />
+      )}
       <div className="my-10 w-full flex justify-center">
         <div className="lg:w-[25%] relative lg:flex flex-col items-start hidden">
           {blog && (
@@ -107,9 +157,20 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
               )}
               <Separator />
               <div>
-                <Button className="rounded-full" variant="ghost" size="default">
-                  <Heart />
-                  <p>19</p>
+                <Button
+                  onClick={handleLikeBlog}
+                  className="rounded-full"
+                  variant="ghost"
+                  size="default"
+                >
+                  {blog.likes.some(
+                    (like) => like.user._id === currentUser?._id,
+                  ) ? (
+                    <FaHeart className="text-rose-500" />
+                  ) : (
+                    <Heart />
+                  )}
+                  <p>{blog.likes.length}</p>
                 </Button>
                 {/* <SheetComments comments={blog.comments}> */}
                 <Button
@@ -119,12 +180,12 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                   size="default"
                 >
                   <MessageCircle />
-                  <p>19</p>
+                  <p>{blog.comments.length}</p>
                 </Button>
                 {/* </SheetComments> */}
                 <Button className="rounded-full" variant="ghost" size="default">
                   <Share />
-                  <p>19</p>
+                  <p>{blog.shares.length}</p>
                 </Button>
               </div>
             </div>
@@ -183,10 +244,19 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
               <Renderer value={blog.content} />
             </div>
             <div className="lg:w-[60%] w-full lg:self-start flex items-center justify-around">
-              <ButtonInteractBlog label="Like" onClick={() => {}}>
-                <Heart />
+              <ButtonInteractBlog label="Like" onClick={handleLikeBlog}>
+                {blog.likes.some(
+                  (like) => like.user._id === currentUser?._id,
+                ) ? (
+                  <FaHeart className="text-rose-500" />
+                ) : (
+                  <Heart />
+                )}
               </ButtonInteractBlog>
-              <ButtonInteractBlog label="Comment" onClick={() => {}}>
+              <ButtonInteractBlog
+                label="Comment"
+                onClick={() => setOpenSheetComments(true)}
+              >
                 <MessageCircle />
               </ButtonInteractBlog>
               <ButtonInteractBlog label="Share" onClick={() => {}}>
@@ -220,7 +290,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                 {`Other related articles`.toUpperCase()}
               </p>
               <div className="flex flex-col gap-y-2 items-start p-2">
-                {blogsByAuthor?.map((blog) => (
+                {blogsByTag?.map((blog) => (
                   <Link
                     className="text-blue-500 hover:underline text-sm"
                     href={`/blogs/${blog._id}`}

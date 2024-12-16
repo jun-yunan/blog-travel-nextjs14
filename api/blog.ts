@@ -126,3 +126,65 @@ export const getAllBlogByAuthor = async ({
     return null;
   }
 };
+
+export const getBlogByTag = async ({
+  tags,
+}: {
+  tags: string[];
+}): Promise<Pick<Blog, '_id' | 'title'>[] | null> => {
+  try {
+    if (!tags || tags.length === 0) {
+      console.error('No tags provided');
+      return null;
+    }
+
+    const queryParams = tags
+      .map((tag) => `tags=${encodeURIComponent(tag)}`)
+      .join('&');
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/blogs/tags?${queryParams}`,
+      {
+        withCredentials: true,
+      },
+    );
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+export const likeBlog = async ({ blogId }: { blogId: string }) => {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/blogs/like/${blogId}`,
+    {},
+    {
+      withCredentials: true,
+    },
+  );
+  if (response.data && response.status === 200) {
+    return response.data;
+  }
+
+  return null;
+};
+
+export const unlikeBlog = async ({ blogId }: { blogId: string }) => {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/blogs/unlike/${blogId}`,
+    {},
+    {
+      withCredentials: true,
+    },
+  );
+  if (response.data && response.status === 200) {
+    return response.data;
+  }
+
+  return null;
+};

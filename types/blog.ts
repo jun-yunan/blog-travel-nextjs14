@@ -1,3 +1,7 @@
+import { Comment } from './comment';
+import { Like } from './like';
+import { Share } from './share';
+
 export interface Author {
   _id: string;
   name: string;
@@ -18,14 +22,8 @@ export interface Blog {
   content: string;
   tags: string[];
   comments: Comment[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface Comment {
-  _id: string;
-  content: string;
-  author: Author;
+  likes: Like[];
+  shares: Share[];
   createdAt: Date;
   updatedAt: Date;
 }
