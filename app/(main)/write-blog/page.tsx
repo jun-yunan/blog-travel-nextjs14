@@ -20,16 +20,9 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import DialogDraft from './_components/dialog-draft';
 import { DialogPublish } from './_components/dialog-publish';
+import { formCreateBlog } from '@/schema/form';
 
 interface WriteBlogProps {}
-
-export const formCreateBlog = z.object({
-  title: z.string().min(1),
-  content: z.string(),
-  tags: z.optional(
-    z.string().transform((tags) => tags.split(',').map((tag) => tag.trim())),
-  ),
-});
 
 const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   const submitRef = useRef<HTMLButtonElement>(null);

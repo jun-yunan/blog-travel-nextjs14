@@ -1,4 +1,4 @@
-import { formCreateBlog } from '@/app/(main)/write-blog/page';
+import { formCreateBlog } from '@/schema/form';
 import { Blog } from '@/types/blog';
 import axios from 'axios';
 import { z } from 'zod';
