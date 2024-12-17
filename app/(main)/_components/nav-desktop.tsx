@@ -21,6 +21,10 @@ const navItems: NavItem[] = [
     href: '/blogs',
   },
   {
+    name: 'Write Blog',
+    href: '/write-blog',
+  },
+  {
     name: 'Destinations',
     href: '/destinations',
   },

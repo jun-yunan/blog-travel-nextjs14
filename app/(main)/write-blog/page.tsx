@@ -9,10 +9,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FunctionComponent, useRef } from 'react';
+import { FunctionComponent, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import Editor from './_components/editor';
 import { useBlogStore } from '@/hooks/useBlogStore';
 import { useMutation } from '@tanstack/react-query';
 import { createBlog } from '@/api/blog';
@@ -21,10 +20,16 @@ import { toast } from 'react-toastify';
 import DialogDraft from './_components/dialog-draft';
 import { DialogPublish } from './_components/dialog-publish';
 import { formCreateBlog } from '@/schema/form';
+import Editor from '../_components/editor';
+import Quill from 'quill';
+import { Card } from '@/components/ui/card';
+import dynamic from 'next/dynamic';
 
 interface WriteBlogProps {}
 
 const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
+  const editorRef = useRef<Quill | null>(null);
+
   const submitRef = useRef<HTMLButtonElement>(null);
   const form = useForm<z.infer<typeof formCreateBlog>>({
     defaultValues: {
@@ -46,6 +51,8 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     mutationFn: createBlog,
     onSuccess(data, variables, context) {
       toast.success('Blog published successfully!');
+      editorRef.current?.setContents([]);
+      form.reset();
       setOpenDialogPublish(false);
     },
     onError(error, variables, context) {
@@ -64,11 +71,11 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   };
 
   return (
-    <>
+    <div className="w-full h-[1500px] flex flex-col items-center mb-10">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-[80%] flex flex-col items-center mx-auto h-[1500px]"
+          className="w-[90%] h-full flex flex-col gap-y-6"
         >
           <DialogDraft />
           <DialogPublish
@@ -96,14 +103,14 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
             />
           </div>
           <div className="w-full h-full flex gap-x-6">
-            <div className="w-full h-full">
-              <Editor onSubmit={() => {}} form={form} />
-            </div>
+            <Card className="w-full h-full">
+              <Editor innerRef={editorRef} onSubmit={() => {}} form={form} />
+            </Card>
           </div>
           <button type="submit" ref={submitRef} className="hidden"></button>
         </form>
       </Form>
-    </>
+    </div>
   );
 };
 

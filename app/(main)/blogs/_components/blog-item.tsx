@@ -69,7 +69,7 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
       >
         Read more...
       </Link>
-      <Separator />
+      {/* <Separator />
       <div className="w-full flex items-center justify-around">
         <ButtonInteractBlog label="Like" onClick={() => {}}>
           <Heart />
@@ -80,7 +80,7 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
         <ButtonInteractBlog label="Share" onClick={() => {}}>
           <Share />
         </ButtonInteractBlog>
-      </div>
+      </div> */}
     </Card>
   );
 };

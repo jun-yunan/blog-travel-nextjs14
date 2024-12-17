@@ -1,7 +1,7 @@
 'use client';
 
 import { FunctionComponent, useEffect, useRef, useState } from 'react';
-import Quill from 'quill';
+import Quill, { Delta, Op } from 'quill';
 
 interface RendererProps {
   value: string;
