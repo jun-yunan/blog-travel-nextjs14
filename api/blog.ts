@@ -57,6 +57,30 @@ export const getAllBlogByUser = async (): Promise<Blog[] | null> => {
   }
 };
 
+export const getAllBlogByUsername = async ({
+  username,
+}: {
+  username: string;
+}): Promise<Blog[] | null> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/blogs-by-username/${username}`,
+      {
+        withCredentials: true,
+      },
+    );
+
+    if (response.data && response.status === 200) {
+      return response.data;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
 export const deleteBlogById = async ({ blogId }: { blogId: string }) => {
   const response = await axios.delete(
     `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,

@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FunctionComponent, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useBlogStore } from '@/hooks/useBlogStore';
@@ -23,11 +23,13 @@ import { formCreateBlog } from '@/schema/form';
 import Editor from '../_components/editor';
 import Quill from 'quill';
 import { Card } from '@/components/ui/card';
+import { set } from 'date-fns';
 
 interface WriteBlogProps {}
 
 const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   const editorRef = useRef<Quill | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   const [coverImage, setCoverImage] = useState<File | null>(null);
 
@@ -71,6 +73,12 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     console.log(data);
     mutationCreateBlog({ data, published: true, coverImage });
   };
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <div className="w-full h-[1500px] flex flex-col items-center mb-10">

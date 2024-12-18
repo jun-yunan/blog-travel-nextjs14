@@ -142,7 +142,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                 </HoverCardProfile>
                 <div className="flex flex-col items-start justify-around">
                   <Link
-                    href={`/${blog.author.username}`}
+                    href={`/profile/${blog.author.username}`}
                     className="text-sm font-semibold hover:underline"
                   >
                     {blog.author.username}
@@ -229,7 +229,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
 
                 <div className="flex flex-col items-start justify-around">
                   <Link
-                    href={`/${blog.author.username}`}
+                    href={`/profile/${blog.author.username}`}
                     className="text-sm font-semibold hover:underline"
                   >
                     {blog.author.username}

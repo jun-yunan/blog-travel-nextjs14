@@ -1,7 +1,7 @@
 'use client';
 
-import { getAllBlogByUser } from '@/api/blog';
-import { getCurrentUser } from '@/api/user';
+import { getAllBlogByUser, getAllBlogByUsername } from '@/api/blog';
+import { getCurrentUser, getUserByUsername } from '@/api/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
@@ -13,31 +13,48 @@ import {
   UsersRound,
 } from 'lucide-react';
 import Image from 'next/image';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useMemo } from 'react';
 import CardBlog from './_components/card-blog';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-interface ProfilePageProps {}
+interface LayoutProfileProps {
+  children: React.ReactNode;
+}
 
-const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
+const LayoutProfile: FunctionComponent<LayoutProfileProps> = ({ children }) => {
   const router = useRouter();
 
-  const { data: user } = useQuery({
+  const pathname = usePathname();
+
+  const username = useMemo(
+    () => decodeURIComponent(pathname.split('/')[2]),
+    [pathname],
+  );
+
+  const { data: currentUser } = useQuery({
     queryKey: ['currentUser', 'user'],
     queryFn: getCurrentUser,
   });
 
-  const {
-    data: blogs,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useQuery({
-    queryKey: ['currentUser', 'blogs'],
-    queryFn: getAllBlogByUser,
+  const { data: blogsByUsername } = useQuery({
+    queryKey: ['profile', username],
+    queryFn: () => getAllBlogByUsername({ username }),
   });
+
+  const { data: userByUsername } = useQuery({
+    queryKey: ['user-by-username', username],
+    queryFn: () => getUserByUsername(username),
+    enabled: !!username,
+  });
+
+  const user = useMemo(
+    () =>
+      currentUser?._id === userByUsername?._id ? currentUser : userByUsername,
+    [currentUser, userByUsername],
+  );
+
   return (
     <>
       <div className="w-[70%] mb-10">
@@ -75,6 +92,7 @@ const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
           <div className="pb-4 w-full h-[88px] flex items-center justify-between">
             <div className="w-[500px] gap-y-2 pl-[75px] overflow-hidden flex flex-col items-start">
               <p className="text-3xl font-semibold">{user?.username}</p>
+              {/* <p className="text-3xl font-semibold">{username}</p> */}
               <ScrollArea className="w-full h-[88px]">
                 <p className="">{user?.bio}</p>
               </ScrollArea>
@@ -119,35 +137,11 @@ const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
               </CardContent>
             </Card>
           </div>
-          <div className="lg:w-[60%] w-full flex flex-col gap-y-6">
-            {Array.isArray(blogs) && blogs.length !== 0 ? (
-              blogs.map((blog) => <CardBlog key={blog._id} blog={blog} />)
-            ) : isLoading ? (
-              <Card className="animate-pulse w-full flex flex-col items-start gap-y-6 p-6">
-                <div className="animate-pulse flex flex-col items-start w-full gap-y-2">
-                  <div className="w-[50%] h-[15px] bg-slate-300"></div>
-                  <div className="w-full h-[15px] bg-slate-300"></div>
-                </div>
-                <div className="animate-pulse w-full h-[150px] bg-slate-300"></div>
-              </Card>
-            ) : (
-              <Card>
-                <CardHeader>
-                  <CardTitle>No Blog</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p>
-                    You have no blog yet, click the button below to create your
-                    first blog
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
+          {children}
         </div>
       </div>
     </>
   );
 };
 
-export default ProfilePage;
+export default LayoutProfile;

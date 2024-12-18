@@ -64,7 +64,7 @@ export function HoverCardProfile<T extends User | Author>({
           <div className="space-y-1">
             <div className="flex items-center gap-x-6">
               <Link
-                href={`/${information.username}`}
+                href={`/profile/${information.username}`}
                 className="text-sm font-semibold hover:underline"
               >
                 {information.username}

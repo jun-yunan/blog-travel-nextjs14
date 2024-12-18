@@ -22,6 +22,26 @@ export const getCurrentUser = async (): Promise<User | null> => {
   }
 };
 
+export const getUserByUsername = async (
+  username: string,
+): Promise<User | null> => {
+  try {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/users/user-by-username/${username}`,
+      { withCredentials: true },
+    );
+
+    if (response.status === 200 && response.data) {
+      return response.data;
+    }
+
+    return null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export const updateProfileUserById = async ({
   userId,
   data,

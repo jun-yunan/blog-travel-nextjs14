@@ -71,7 +71,9 @@ export function Account() {
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>{user?.email || 'My Account'}</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => router.push('/profile')}>
+          <DropdownMenuItem
+            onClick={() => router.push(`/profile/${user?.username}`)}
+          >
             <UserRound />
             <span>Profile</span>
           </DropdownMenuItem>
