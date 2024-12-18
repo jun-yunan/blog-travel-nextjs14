@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FunctionComponent, useEffect, useRef } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useBlogStore } from '@/hooks/useBlogStore';
@@ -23,19 +23,21 @@ import { formCreateBlog } from '@/schema/form';
 import Editor from '../_components/editor';
 import Quill from 'quill';
 import { Card } from '@/components/ui/card';
-import dynamic from 'next/dynamic';
 
 interface WriteBlogProps {}
 
 const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   const editorRef = useRef<Quill | null>(null);
 
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+
   const submitRef = useRef<HTMLButtonElement>(null);
+
   const form = useForm<z.infer<typeof formCreateBlog>>({
     defaultValues: {
       title: '',
       content: '',
-      tags: [],
+      tags: '',
     },
     resolver: zodResolver(formCreateBlog),
   });
@@ -67,7 +69,7 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
 
   const onSubmit = (data: z.infer<typeof formCreateBlog>) => {
     console.log(data);
-    mutationCreateBlog({ data, published: true });
+    mutationCreateBlog({ data, published: true, coverImage });
   };
 
   return (
@@ -75,10 +77,11 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="w-[90%] h-full flex flex-col gap-y-6"
+          className="lg:w-[60%] w-[90%] h-full flex flex-col gap-y-6"
         >
-          <DialogDraft />
+          <DialogDraft submitRef={submitRef} />
           <DialogPublish
+            setCoverImage={setCoverImage}
             isPending={isPending}
             form={form}
             submitRef={submitRef}

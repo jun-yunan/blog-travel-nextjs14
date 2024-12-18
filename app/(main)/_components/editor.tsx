@@ -13,6 +13,8 @@ import 'quill/dist/quill.snow.css';
 import { cn } from '@/lib/utils';
 import { UseFormReturn } from 'react-hook-form';
 import { useBlogStore } from '@/hooks/useBlogStore';
+import { z } from 'zod';
+import { formCreateBlog } from '@/schema/form';
 
 type EditorValue = {
   image: File | null;
@@ -20,15 +22,7 @@ type EditorValue = {
 };
 
 interface EditorProps {
-  form: UseFormReturn<
-    {
-      title: string;
-      content: string;
-      tags?: string[];
-    },
-    unknown,
-    undefined
-  >;
+  form: UseFormReturn<z.infer<typeof formCreateBlog>>;
   onSubmit: ({ image, body }: EditorValue) => void;
   onCancel?: () => void;
   placeholder?: string;

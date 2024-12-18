@@ -9,16 +9,21 @@ import {
 import { useBlogStore } from '@/hooks/useBlogStore';
 import { Bookmark, PencilLine, Pin, Trash2 } from 'lucide-react';
 import { FunctionComponent } from 'react';
+import { DialogDeleteBlog } from './dialog-delete-blog';
 
 interface DropdownMenuBlogProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  blogId: string;
 }
 
 const DropdownMenuBlog: FunctionComponent<DropdownMenuBlogProps> = ({
   children,
+  blogId,
 }) => {
-  const { setOpenDialogDelete } = useBlogStore();
+  const { setOpenDialogDelete, openDropdownMenu, setOpenDropdownMenu } =
+    useBlogStore();
   return (
+    // <DropdownMenu open={openDropdownMenu} onOpenChange={setOpenDropdownMenu}>
     <DropdownMenu>
       <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
       <DropdownMenuContent>

@@ -21,6 +21,7 @@ import { DialogDeleteBlog } from './dialog-delete-blog';
 import { HoverCardProfile } from '@/app/(main)/_components/hover-card-profile';
 import ButtonInteractBlog from './button-interact-blog';
 import Link from 'next/link';
+import { useBlogStore } from '@/hooks/useBlogStore';
 
 interface CardBlogProps {
   blog: Blog;
@@ -31,10 +32,10 @@ const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
 });
 
 const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
+  const { setOpenDropdownMenu } = useBlogStore();
   return (
     <>
       <DialogDeleteBlog blogId={blog._id} />
-
       <Card className="w-full overflow-hidden flex flex-col">
         <div className="w-full flex items-center justify-between p-5">
           <div className="flex items-center gap-x-3">
@@ -70,7 +71,7 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
               </p>
             </div>
           </div>
-          <DropdownMenuBlog>
+          <DropdownMenuBlog blogId={blog._id}>
             <EllipsisVertical className="h-5 w-5" />
           </DropdownMenuBlog>
         </div>
@@ -83,16 +84,16 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
         <div className="w-full flex items-center justify-between px-4 py-1">
           <Button variant="ghost" className="text-base rounded-full">
             <Heart />
-            <p>12</p>
+            <p>{blog.likes.length}</p>
           </Button>
           <div className="flex items-center gap-x-3">
             <Button variant="ghost" className="text-base rounded-full">
               <MessageCircle />
-              <p>12</p>
+              <p>{blog.comments.length}</p>
             </Button>
             <Button variant="ghost" className="text-base rounded-full">
               <Share />
-              <p>12</p>
+              <p>{blog.shares.length}</p>
             </Button>
           </div>
         </div>

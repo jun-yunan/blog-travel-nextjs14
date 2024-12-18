@@ -8,25 +8,31 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useBlogStore } from '@/hooks/useBlogStore';
 import { queryClient } from '@/providers/tanstack-query-provider';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React from 'react';
 import { toast } from 'react-toastify';
 
 interface DialogDeleteBlogProps {
   blogId: string;
+  children?: React.ReactNode;
 }
 
-export function DialogDeleteBlog({ blogId }: DialogDeleteBlogProps) {
+export function DialogDeleteBlog({ blogId, children }: DialogDeleteBlogProps) {
+  const router = useRouter();
   const { openDialogDelete, setOpenDialogDelete } = useBlogStore();
   const { mutate: mutationDeleteBlog, isPending } = useMutation({
     mutationKey: ['delete-blog'],
     mutationFn: deleteBlogById,
     onSuccess(data, variables, context) {
       toast.success('Blog post deleted successfully');
+      router.prefetch('/profile');
       setOpenDialogDelete(false);
       queryClient.invalidateQueries({
         queryKey: ['currentUser', 'blogs'],
@@ -45,6 +51,7 @@ export function DialogDeleteBlog({ blogId }: DialogDeleteBlogProps) {
   };
   return (
     <AlertDialog open={openDialogDelete} onOpenChange={setOpenDialogDelete}>
+      {/* <AlertDialogTrigger asChild>{children}</AlertDialogTrigger> */}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>

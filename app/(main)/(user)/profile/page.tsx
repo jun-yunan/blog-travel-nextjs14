@@ -18,7 +18,6 @@ import CardBlog from './_components/card-blog';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { HoverCardProfile } from '../../_components/hover-card-profile';
 
 interface ProfilePageProps {}
 
@@ -123,6 +122,14 @@ const ProfilePage: FunctionComponent<ProfilePageProps> = () => {
           <div className="lg:w-[60%] w-full flex flex-col gap-y-6">
             {Array.isArray(blogs) && blogs.length !== 0 ? (
               blogs.map((blog) => <CardBlog key={blog._id} blog={blog} />)
+            ) : isLoading ? (
+              <Card className="animate-pulse w-full flex flex-col items-start gap-y-6 p-6">
+                <div className="animate-pulse flex flex-col items-start w-full gap-y-2">
+                  <div className="w-[50%] h-[15px] bg-slate-300"></div>
+                  <div className="w-full h-[15px] bg-slate-300"></div>
+                </div>
+                <div className="animate-pulse w-full h-[150px] bg-slate-300"></div>
+              </Card>
             ) : (
               <Card>
                 <CardHeader>

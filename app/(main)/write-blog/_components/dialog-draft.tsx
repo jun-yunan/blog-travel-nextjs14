@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { FunctionComponent, RefObject } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,9 +11,11 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useBlogStore } from '@/hooks/useBlogStore';
 
-interface DialogDraftProps {}
+interface DialogDraftProps {
+  submitRef: RefObject<HTMLButtonElement>;
+}
 
-const DialogDraft: FunctionComponent<DialogDraftProps> = () => {
+const DialogDraft: FunctionComponent<DialogDraftProps> = ({ submitRef }) => {
   const { openDialogDraft, setOpenDialogDraft, setWriteBlog, writeBlog } =
     useBlogStore();
 
@@ -31,6 +33,7 @@ const DialogDraft: FunctionComponent<DialogDraftProps> = () => {
           <AlertDialogAction
             onClick={() => {
               setWriteBlog({ published: false });
+              submitRef.current?.click();
             }}
           >
             Save

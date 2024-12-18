@@ -45,9 +45,7 @@ export const formPassword = z.object({
 });
 
 export const formCreateBlog = z.object({
-  title: z.string().min(1),
+  title: z.string().min(1, 'Title is required'),
   content: z.string(),
-  tags: z.optional(
-    z.string().transform((tags) => tags.split(',').map((tag) => tag.trim())),
-  ),
+  tags: z.string().optional(),
 });

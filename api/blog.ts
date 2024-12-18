@@ -6,13 +6,25 @@ import { z } from 'zod';
 export const createBlog = async ({
   data,
   published,
+  coverImage,
 }: {
   data: z.infer<typeof formCreateBlog>;
   published: boolean;
+  coverImage: File | null;
 }) => {
+  const formData = new FormData();
+  formData.set('title', data.title);
+  formData.set('content', data.content);
+  formData.set('published', String(published));
+  if (data.tags) {
+    formData.set('tags', JSON.stringify(data.tags));
+  }
+  if (coverImage) {
+    formData.set('coverImage', coverImage);
+  }
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/blogs`,
-    { ...data, published },
+    formData,
     {
       withCredentials: true,
     },
