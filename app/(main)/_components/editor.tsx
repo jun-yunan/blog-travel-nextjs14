@@ -1,5 +1,3 @@
-'use client';
-
 import React, {
   MutableRefObject,
   useEffect,
@@ -12,9 +10,9 @@ import { Delta, Op } from 'quill/core';
 import 'quill/dist/quill.snow.css';
 import { cn } from '@/lib/utils';
 import { UseFormReturn } from 'react-hook-form';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import { z } from 'zod';
 import { formCreateBlog } from '@/schema/form';
+import { blogStore } from '@/store/blogStore';
 
 type EditorValue = {
   image: File | null;
@@ -44,7 +42,7 @@ const Editor = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { setWriteBlog } = useBlogStore();
+  const { setWriteBlog } = blogStore();
 
   const submitRef = useRef(onSubmit);
   const placeholderRef = useRef(placeholder);

@@ -21,21 +21,23 @@ import { DialogDeleteBlog } from './dialog-delete-blog';
 import { HoverCardProfile } from '@/app/(main)/_components/hover-card-profile';
 import ButtonInteractBlog from './button-interact-blog';
 import Link from 'next/link';
-import { useBlogStore } from '@/hooks/useBlogStore';
 
-interface CardBlogProps {
+interface CardBlogProfileProps {
   blog: Blog;
+  username: string;
 }
 
 const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
   ssr: false,
 });
 
-const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
-  const { setOpenDropdownMenu } = useBlogStore();
+const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
+  blog,
+  username,
+}) => {
   return (
     <>
-      <DialogDeleteBlog blogId={blog._id} />
+      {/* <DialogDeleteBlog username={username} /> */}
       <Card className="w-full overflow-hidden flex flex-col">
         <div className="w-full flex items-center justify-between p-5">
           <div className="flex items-center gap-x-3">
@@ -114,4 +116,4 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({ blog }) => {
   );
 };
 
-export default CardBlog;
+export default CardBlogProfile;

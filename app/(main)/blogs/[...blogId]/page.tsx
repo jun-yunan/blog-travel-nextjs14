@@ -16,7 +16,7 @@ import {
   MoreVertical,
   Share,
 } from 'lucide-react';
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { HoverCardProfile } from '../../_components/hover-card-profile';
@@ -30,12 +30,12 @@ import { Button } from '@/components/ui/button';
 import useFooterStore from '@/store/footerStore';
 import { cn } from '@/lib/utils';
 import { SheetComments } from '../../_components/sheet-comments';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import { getCurrentUser } from '@/api/user';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { queryClient } from '@/providers/tanstack-query-provider';
 import dynamic from 'next/dynamic';
+import { blogStore } from '@/store/blogStore';
 
 interface BlogDetailsProps {
   params: {
@@ -50,7 +50,7 @@ const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
 const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
   const isFooterVisible = useFooterStore((state) => state.isFooterVisible);
 
-  const { setOpenSheetComments } = useBlogStore();
+  const { setOpenSheetComments } = blogStore();
 
   const {
     data: blog,

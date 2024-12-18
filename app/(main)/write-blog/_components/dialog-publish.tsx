@@ -20,8 +20,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import { formCreateBlog } from '@/schema/form';
+import { blogStore } from '@/store/blogStore';
 import { ImagePlus, Loader2, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { Dispatch, RefObject, SetStateAction, useRef, useState } from 'react';
@@ -43,7 +43,7 @@ export function DialogPublish({
 }: DialogPublishProps) {
   const [image, setImage] = useState<File | null>(null);
 
-  const { openDialogPublish, setOpenDialogPublish, writeBlog } = useBlogStore();
+  const { openDialogPublish, setOpenDialogPublish, writeBlog } = blogStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   return (

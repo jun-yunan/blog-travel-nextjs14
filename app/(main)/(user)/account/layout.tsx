@@ -4,11 +4,10 @@ import { FunctionComponent, useEffect } from 'react';
 import SidebarSettings from '../_components/sidebar-settings';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePathname } from 'next/navigation';
-import { Crown, Loader2, User, UserRound } from 'lucide-react';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { Crown, Loader2, UserRound } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/api/user';
-import { useUserStore } from '@/hooks/useUserStore';
+import { userStore } from '@/store/userStore';
 
 interface LayoutSettingsProps {
   children: React.ReactNode;
@@ -18,7 +17,7 @@ const LayoutSettings: FunctionComponent<LayoutSettingsProps> = ({
   children,
 }) => {
   const pathname = usePathname();
-  const { setUser } = useUserStore();
+  const { setUser } = userStore();
   const {
     data: currentUser,
     isPending,

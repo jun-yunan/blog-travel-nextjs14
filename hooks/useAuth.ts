@@ -1,14 +1,14 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import axios, { isAxiosError } from 'axios';
-import { useUserStore } from './useUserStore';
 import { User } from '@/types/user';
+import { userStore } from '@/store/userStore';
 
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { setUser: setUserStore } = useUserStore();
+  const { setUser: setUserStore } = userStore();
 
   const router = useRouter();
 

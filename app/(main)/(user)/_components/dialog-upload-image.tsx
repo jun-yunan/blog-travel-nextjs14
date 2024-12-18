@@ -5,25 +5,22 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useUserStore } from '@/hooks/useUserStore';
 import { queryClient } from '@/providers/tanstack-query-provider';
+import { userStore } from '@/store/userStore';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { CloudUpload, Loader2, X } from 'lucide-react';
+import { CloudUpload, Loader2 } from 'lucide-react';
 import Image from 'next/image';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
 export function DialogUploadImage() {
-  const { openDialogUploadImage, setOpenDialogUploadImage, user } =
-    useUserStore();
+  const { openDialogUploadImage, setOpenDialogUploadImage, user } = userStore();
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -8,9 +8,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import { Comment } from '@/types/comment';
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import CommentField, { EditorValue } from './comment-field';
 import { useMutation } from '@tanstack/react-query';
 import { createComment } from '@/api/comment';
@@ -21,6 +20,7 @@ import CommentItem from './comment-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Author } from '@/types/blog';
 import { User } from '@/types/user';
+import { blogStore } from '@/store/blogStore';
 
 interface SheetCommentsProps {
   children?: React.ReactNode;
@@ -37,7 +37,7 @@ export function SheetComments({
   author,
   user,
 }: SheetCommentsProps) {
-  const { openSheetComments, setOpenSheetComments } = useBlogStore();
+  const { openSheetComments, setOpenSheetComments } = blogStore();
 
   const commentEndRef = useRef<HTMLDivElement>(null);
 

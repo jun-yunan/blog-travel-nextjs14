@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useBlogStore } from '@/hooks/useBlogStore';
+import { blogStore } from '@/store/blogStore';
 
 interface DialogDraftProps {
   submitRef: RefObject<HTMLButtonElement>;
@@ -17,7 +17,7 @@ interface DialogDraftProps {
 
 const DialogDraft: FunctionComponent<DialogDraftProps> = ({ submitRef }) => {
   const { openDialogDraft, setOpenDialogDraft, setWriteBlog, writeBlog } =
-    useBlogStore();
+    blogStore();
 
   return (
     <AlertDialog open={openDialogDraft} onOpenChange={setOpenDialogDraft}>

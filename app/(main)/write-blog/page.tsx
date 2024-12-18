@@ -9,10 +9,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FunctionComponent, useEffect, useRef, useState } from 'react';
+import { FunctionComponent, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import { useMutation } from '@tanstack/react-query';
 import { createBlog } from '@/api/blog';
 import axios from 'axios';
@@ -23,6 +22,7 @@ import { formCreateBlog } from '@/schema/form';
 import Quill from 'quill';
 import { Card } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
+import { blogStore } from '@/store/blogStore';
 
 interface WriteBlogProps {}
 
@@ -44,7 +44,7 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     },
     resolver: zodResolver(formCreateBlog),
   });
-  const { openDialogPublish, setOpenDialogPublish, writeBlog } = useBlogStore();
+  const { openDialogPublish, setOpenDialogPublish, writeBlog } = blogStore();
 
   const { mutate: mutationCreateBlog, isPending } = useMutation({
     mutationKey: ['create-blog'],
@@ -69,8 +69,6 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     console.log(data);
     mutationCreateBlog({ data, published: true, coverImage });
   };
-
-  if (typeof window === 'undefined') return null;
 
   return (
     <div className="w-full h-[1500px] flex flex-col items-center mb-10">

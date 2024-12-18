@@ -9,7 +9,7 @@ type UserStore = {
   setOpenDialogUploadImage: (open: boolean) => void;
 };
 
-export const useUserStore = create<UserStore>((set) => ({
+export const userStore = create<UserStore>((set) => ({
   user: null,
   userId: null,
   openDialogUploadImage: false,

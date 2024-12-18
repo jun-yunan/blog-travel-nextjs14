@@ -12,8 +12,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useUserStore } from '@/hooks/useUserStore';
 import { formPassword } from '@/schema/form';
+import { userStore } from '@/store/userStore';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
@@ -34,7 +34,7 @@ const PasswordPage: FunctionComponent<PasswordPageProps> = () => {
     resolver: zodResolver(formPassword),
   });
 
-  const { user } = useUserStore();
+  const { user } = userStore();
 
   const {
     mutate: updatePassword,

@@ -6,10 +6,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import { Bookmark, PencilLine, Pin, Trash2 } from 'lucide-react';
 import { FunctionComponent } from 'react';
-import { DialogDeleteBlog } from './dialog-delete-blog';
+import { blogStore } from '@/store/blogStore';
+import { useDeleteBlog } from '@/hooks/useDeleteBlog';
 
 interface DropdownMenuBlogProps {
   children?: React.ReactNode;
@@ -20,10 +20,13 @@ const DropdownMenuBlog: FunctionComponent<DropdownMenuBlogProps> = ({
   children,
   blogId,
 }) => {
-  const { setOpenDialogDelete, openDropdownMenu, setOpenDropdownMenu } =
-    useBlogStore();
+  const { onOpenChange, setBlogId } = useDeleteBlog();
+
+  const handleDeleteBlog = () => {
+    setBlogId(blogId);
+    onOpenChange(true);
+  };
   return (
-    // <DropdownMenu open={openDropdownMenu} onOpenChange={setOpenDropdownMenu}>
     <DropdownMenu>
       <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
       <DropdownMenuContent>
@@ -42,7 +45,7 @@ const DropdownMenuBlog: FunctionComponent<DropdownMenuBlogProps> = ({
           <p>Pin Blog</p>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => setOpenDialogDelete(true)}>
+        <DropdownMenuItem onClick={handleDeleteBlog}>
           <Trash2 className="h-4 w-4" />
           <p>Delete</p>
         </DropdownMenuItem>

@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 import { ChevronLeft, PenLine } from 'lucide-react';
-import { useBlogStore } from '@/hooks/useBlogStore';
 import { useRouter } from 'next/navigation';
+import { blogStore } from '@/store/blogStore';
 
 interface HeaderWriteBlogProps {}
 
@@ -22,7 +22,7 @@ const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
     writeBlog,
     openDialogDraft,
     setOpenDialogDraft,
-  } = useBlogStore();
+  } = blogStore();
   return (
     <div className="fixed z-50 flex items-center justify-between px-12 w-full h-[75px]">
       <div className="flex items-center gap-x-2">

@@ -18,7 +18,6 @@ import { z } from 'zod';
 import { DatePicker } from '../../_components/date-picker';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getCurrentUser, updateProfileUserById } from '@/api/user';
-import { useUserStore } from '@/hooks/useUserStore';
 import { isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { queryClient } from '@/providers/tanstack-query-provider';
@@ -26,13 +25,14 @@ import { CloudUpload, Loader2, Trash2, UserRound } from 'lucide-react';
 import { DialogUploadImage } from '../../_components/dialog-upload-image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formEditProfile } from '@/schema/form';
+import { userStore } from '@/store/userStore';
 
 interface EditProfileProps {}
 
 const EditProfile: FunctionComponent<EditProfileProps> = () => {
   const [date, setDate] = useState<Date>();
 
-  const { setOpenDialogUploadImage } = useUserStore();
+  const { setOpenDialogUploadImage } = userStore();
 
   const { data: user, isLoading } = useQuery({
     queryKey: ['currentUser', 'user'],

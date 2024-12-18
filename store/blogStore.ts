@@ -22,7 +22,7 @@ type BlogStore = {
   setWriteBlog: (writeBlog: WriteBlog) => void;
 };
 
-export const useBlogStore = create<BlogStore>((set) => ({
+export const blogStore = create<BlogStore>((set) => ({
   openDialogPublish: false,
   openDialogDraft: false,
   openDialogDelete: false,
