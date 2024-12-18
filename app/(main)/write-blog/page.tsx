@@ -20,12 +20,13 @@ import { toast } from 'react-toastify';
 import DialogDraft from './_components/dialog-draft';
 import { DialogPublish } from './_components/dialog-publish';
 import { formCreateBlog } from '@/schema/form';
-import Editor from '../_components/editor';
 import Quill from 'quill';
-import 'quill/dist/quill.snow.css';
 import { Card } from '@/components/ui/card';
+import dynamic from 'next/dynamic';
 
 interface WriteBlogProps {}
+
+const Editor = dynamic(() => import('../_components/editor'), { ssr: false });
 
 const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   const editorRef = useRef<Quill | null>(null);
