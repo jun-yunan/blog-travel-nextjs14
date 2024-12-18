@@ -22,8 +22,8 @@ import { DialogPublish } from './_components/dialog-publish';
 import { formCreateBlog } from '@/schema/form';
 import Editor from '../_components/editor';
 import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
 import { Card } from '@/components/ui/card';
-import { set } from 'date-fns';
 
 interface WriteBlogProps {}
 
@@ -45,12 +45,7 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   });
   const { openDialogPublish, setOpenDialogPublish, writeBlog } = useBlogStore();
 
-  const {
-    mutate: mutationCreateBlog,
-    isPending,
-    isSuccess,
-    isError,
-  } = useMutation({
+  const { mutate: mutationCreateBlog, isPending } = useMutation({
     mutationKey: ['create-blog'],
     mutationFn: createBlog,
     onSuccess(data, variables, context) {
@@ -74,11 +69,7 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     mutationCreateBlog({ data, published: true, coverImage });
   };
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  if (typeof window === 'undefined') return null;
 
   return (
     <div className="w-full h-[1500px] flex flex-col items-center mb-10">
