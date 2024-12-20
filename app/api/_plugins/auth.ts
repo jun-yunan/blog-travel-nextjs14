@@ -67,15 +67,15 @@ export const auth = new Elysia()
                 email: user.email,
               }),
               httpOnly: true,
-              // secure: process.env.NODE_ENV === 'production',
+              secure: process.env.NODE_ENV === 'production',
               // maxAge: 7 * 86400, //7 days
               maxAge: 30 * 60,
-              // sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-              // domain:
-              //   process.env.NODE_ENV === 'production'
-              //     ? 'blog-travel-pearl.vercel.app'
-              //     : 'localhost',
-              // path: '/',
+              sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+              domain:
+                process.env.NODE_ENV === 'production'
+                  ? 'blog-travel-pearl.vercel.app'
+                  : 'localhost',
+              path: '/',
             });
 
             return {
