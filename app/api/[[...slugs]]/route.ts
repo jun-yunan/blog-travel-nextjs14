@@ -11,7 +11,7 @@ const app = new Elysia({
 })
   .use(swagger())
   .use(cors())
-  .get('/', () => 'Hello Elysia')
+  .get('/', () => ({ message: 'Welcome to Elysia API' }))
   .use(auth)
   .use(blog)
   .use(user)
