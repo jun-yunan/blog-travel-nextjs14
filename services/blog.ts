@@ -167,7 +167,7 @@ export const getBlogByTag = async ({
   tags,
 }: {
   tags: string[];
-}): Promise<Pick<Blog, '_id' | 'title'>[] | null> => {
+}): Promise<Pick<Blog, 'id' | 'title'>[] | null> => {
   try {
     if (!tags || tags.length === 0) {
       console.error('No tags provided');

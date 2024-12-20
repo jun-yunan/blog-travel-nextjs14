@@ -73,7 +73,7 @@ const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
               </p>
             </div>
           </div>
-          <DropdownMenuBlog blogId={blog._id}>
+          <DropdownMenuBlog blogId={blog.id}>
             <EllipsisVertical className="h-5 w-5" />
           </DropdownMenuBlog>
         </div>

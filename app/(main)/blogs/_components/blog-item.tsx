@@ -55,7 +55,7 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
           <MoreVertical className="h-5 w-5" />
         </div>
       </div>
-      <Link href={`/blogs/${blog._id}`}>
+      <Link href={`/blogs/${blog.id}`}>
         <p className="text-lg font-semibold hover:text-purple-500 transition-all duration-300">
           {blog.title}
         </p>
@@ -64,23 +64,11 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
         </div>
       </Link>
       <Link
-        href={`/blogs/${blog._id}`}
+        href={`/blogs/${blog.id}`}
         className="text-sm font-medium text-blue-500 hover:underline"
       >
         Read more...
       </Link>
-      {/* <Separator />
-      <div className="w-full flex items-center justify-around">
-        <ButtonInteractBlog label="Like" onClick={() => {}}>
-          <Heart />
-        </ButtonInteractBlog>
-        <ButtonInteractBlog label="Comment" onClick={() => {}}>
-          <MessageCircle />
-        </ButtonInteractBlog>
-        <ButtonInteractBlog label="Share" onClick={() => {}}>
-          <Share />
-        </ButtonInteractBlog>
-      </div> */}
     </Card>
   );
 };

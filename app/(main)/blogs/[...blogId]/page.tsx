@@ -5,7 +5,7 @@ import {
   getBlogByTag,
   likeBlog,
   unlikeBlog,
-} from '@/api/blog';
+} from '@/services/blog';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { FaHeart } from 'react-icons/fa';
 import {
@@ -30,7 +30,7 @@ import { Button } from '@/components/ui/button';
 import useFooterStore from '@/store/footerStore';
 import { cn } from '@/lib/utils';
 import { SheetComments } from '../../_components/sheet-comments';
-import { getCurrentUser } from '@/api/user';
+import { getCurrentUser } from '@/services/user';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { queryClient } from '@/providers/tanstack-query-provider';
@@ -63,9 +63,9 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
   });
 
   const { data: blogsByAuthor } = useQuery({
-    queryKey: ['blogs-by-author', blog?.author._id],
-    queryFn: () => getAllBlogByAuthor({ authorId: blog?.author._id || '' }),
-    enabled: !!blog?.author._id,
+    queryKey: ['blogs-by-author', blog?.author.id],
+    queryFn: () => getAllBlogByAuthor({ authorId: blog?.author.id || '' }),
+    enabled: !!blog?.author.id,
   });
 
   const { data: currentUser } = useQuery({
@@ -80,7 +80,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
   });
 
   const { mutate: mutationLikeBlog, isSuccess: isLiked } = useMutation({
-    mutationKey: ['like', blog?._id],
+    mutationKey: ['like', blog?.id],
     mutationFn: likeBlog,
     onSuccess: () => {
       toast.success('Liked blog successfully');
@@ -100,12 +100,12 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
   });
 
   const {} = useMutation({
-    mutationKey: ['unlike', blog?._id],
+    mutationKey: ['unlike', blog?.id],
     mutationFn: unlikeBlog,
   });
 
   const handleLikeBlog = () => {
-    if (blog) mutationLikeBlog({ blogId: blog._id });
+    if (blog) mutationLikeBlog({ blogId: blog.id });
   };
 
   return (
@@ -168,7 +168,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                   size="default"
                 >
                   {blog.likes.some(
-                    (like) => like.user._id === currentUser?._id,
+                    (like) => like.user.id === currentUser?.id,
                   ) ? (
                     <FaHeart className="text-rose-500" />
                   ) : (
@@ -249,9 +249,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
             </div>
             <div className="lg:w-[60%] w-full lg:self-start flex items-center justify-around">
               <ButtonInteractBlog label="Like" onClick={handleLikeBlog}>
-                {blog.likes.some(
-                  (like) => like.user._id === currentUser?._id,
-                ) ? (
+                {blog.likes.some((like) => like.user.id === currentUser?.id) ? (
                   <FaHeart className="text-rose-500" />
                 ) : (
                   <Heart />
@@ -280,8 +278,8 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                 {blogsByAuthor?.map((blog) => (
                   <Link
                     className="text-blue-500 hover:underline text-sm"
-                    href={`/blogs/${blog._id}`}
-                    key={blog._id}
+                    href={`/blogs/${blog.id}`}
+                    key={blog.id}
                   >
                     {blog.title}
                   </Link>
@@ -297,8 +295,8 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                 {blogsByTag?.map((blog) => (
                   <Link
                     className="text-blue-500 hover:underline text-sm"
-                    href={`/blogs/${blog._id}`}
-                    key={blog._id}
+                    href={`/blogs/${blog.id}`}
+                    key={blog.id}
                   >
                     {blog.title}
                   </Link>

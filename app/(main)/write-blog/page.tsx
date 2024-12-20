@@ -13,7 +13,7 @@ import { FunctionComponent, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
-import { createBlog } from '@/api/blog';
+import { createBlog } from '@/services/blog';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import DialogDraft from './_components/dialog-draft';

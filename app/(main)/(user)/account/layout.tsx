@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { usePathname } from 'next/navigation';
 import { Crown, Loader2, UserRound } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { getCurrentUser } from '@/api/user';
+import { getCurrentUser } from '@/services/user';
 import { userStore } from '@/store/userStore';
 
 interface LayoutSettingsProps {

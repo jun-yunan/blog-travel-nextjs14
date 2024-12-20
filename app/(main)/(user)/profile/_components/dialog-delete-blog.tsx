@@ -1,4 +1,4 @@
-import { deleteBlogById } from '@/api/blog';
+import { deleteBlogById } from '@/services/blog';
 import {
   AlertDialog,
   AlertDialogAction,

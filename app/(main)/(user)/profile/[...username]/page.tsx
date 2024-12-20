@@ -1,6 +1,6 @@
 'use client';
 
-import { getAllBlogByUsername } from '@/api/blog';
+import { getAllBlogByUsername } from '@/services/blog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { getCurrentUser, getUserByUsername } from '@/api/user';
+import { getCurrentUser, getUserByUsername } from '@/services/user';
 import CardBlogProfile from '../_components/card-blog-profile';
 import { DialogDeleteBlog } from '../_components/dialog-delete-blog';
 
@@ -49,7 +49,7 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
 
   const user = useMemo(
     () =>
-      currentUser?._id === userByUsername?._id ? currentUser : userByUsername,
+      currentUser?.id === userByUsername?.id ? currentUser : userByUsername,
     [currentUser, userByUsername],
   );
 

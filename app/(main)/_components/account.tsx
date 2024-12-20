@@ -27,7 +27,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { getCurrentUser } from '@/api/user';
+import { getCurrentUser } from '@/services/user';
 import { Button } from '@/components/ui/button';
 import { ToggleTheme } from './toggle-theme';
 

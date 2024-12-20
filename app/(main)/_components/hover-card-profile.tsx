@@ -26,7 +26,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { useQuery } from '@tanstack/react-query';
-import { getCurrentUser } from '@/api/user';
+import { getCurrentUser } from '@/services/user';
 
 type HoverCardProfileProps<T> = {
   children: React.ReactNode;
@@ -70,7 +70,7 @@ export function HoverCardProfile<T extends User | Author>({
                 {information.username}
               </Link>
 
-              {currentUser?._id !== information._id && (
+              {currentUser?.id !== information.id && (
                 <Button
                   size="sm"
                   variant="outline"
@@ -120,10 +120,10 @@ export function HoverCardProfile<T extends User | Author>({
             </div>
           </div>
         </div>
-        {currentUser && currentUser._id !== information._id && (
+        {currentUser && currentUser.id !== information.id && (
           <Separator className="mt-4" />
         )}
-        {currentUser && currentUser._id !== information._id && (
+        {currentUser && currentUser.id !== information.id && (
           <div className="w-full flex justify-around items-center mt-4">
             <Button
               size="sm"

@@ -1,41 +1,12 @@
-import { NextResponse, NextRequest, NextFetchEvent } from 'next/server';
-import { decrypt } from './lib/session';
+import { clerkMiddleware } from '@clerk/nextjs/server';
 
-const protectedRoutes = ['/dashboard', '/blogs'];
-const publicRoutes = ['/sign-in', '/sign-up', '/'];
-
-export default async function middleware(
-  req: NextRequest,
-  event: NextFetchEvent,
-) {
-  const path = req.nextUrl.pathname;
-
-  const isProtectedRoute = protectedRoutes.includes(path);
-
-  const isPublicRoute = publicRoutes.includes(path);
-
-  const token = req.cookies.get('auth');
-
-  if (!token?.value && isProtectedRoute) {
-    return NextResponse.redirect(new URL('/sign-in', req.url));
-  }
-
-  const session = await decrypt(token?.value);
-
-  if (isProtectedRoute && !session) {
-    return NextResponse.redirect(new URL('/sign-in', req.nextUrl));
-  }
-  if (
-    isPublicRoute &&
-    session &&
-    !req.nextUrl.pathname.startsWith('/dashboard')
-  ) {
-    return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
-  }
-
-  return NextResponse.next();
-}
+export default clerkMiddleware();
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
 };

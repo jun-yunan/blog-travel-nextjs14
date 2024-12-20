@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String    @unique()
+  username        String    @unique()
+  password        String
+  bio             String?
+  personalWebsite String?
+  imageUrl        String?
+  location        String?
+  role            String    @default("USER")
+  dateOfBirth     DateTime?   @db.Date
+  createdAt       DateTime  @default(now()) @db.Date
+  updatedAt       DateTime  @updatedAt
+
+  blogs           Blog[]
+  comments        Comment[]
+  likes           Like[]
+}
+
+
+model Blog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  title     String
+  content   String
+  imageUrl  String?
+  comments  Comment[]
+  likes     Like[]
+  shares    String[]
+  tags      String[]
+  slug      String
+  published Boolean  @default(false)
+  authorId    String   @db.ObjectId
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt @db.Date
+
+  author    User     @relation(fields: [authorId], references: [id])
+
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  blogId      String   @db.ObjectId
+  userId      String   @db.ObjectId
+  content   String
+  imageUrl  String?
+  replies   String[]
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt @db.Date
+
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  blogId      String   @db.ObjectId
+  userId     String   @db.ObjectId
+  liked     Boolean 
+  createdAt DateTime @default(now()) @db.Date
+  updatedAt DateTime @updatedAt @db.Date
+
+  blog      Blog     @relation(fields: [blogId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+

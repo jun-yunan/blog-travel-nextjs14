@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { DatePicker } from '../../_components/date-picker';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getCurrentUser, updateProfileUserById } from '@/api/user';
+import { getCurrentUser, updateProfileUserById } from '@/services/user';
 import { isAxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { queryClient } from '@/providers/tanstack-query-provider';
@@ -82,8 +82,8 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
   }, [user, form]);
 
   const onSubmit = (values: z.infer<typeof formEditProfile>) => {
-    if (user?._id) {
-      updateProfile({ userId: user._id, data: values });
+    if (user?.id) {
+      updateProfile({ userId: user.id, data: values });
     } else {
       toast.error('An error occurred. Please try again.');
     }

@@ -1,4 +1,4 @@
-import { updateUserAvatar } from '@/api/user';
+import { updateUserAvatar } from '@/services/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {

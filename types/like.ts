@@ -2,7 +2,7 @@ import { Blog } from './blog';
 import { User } from './user';
 
 export interface Like {
-  _id: string;
+  id: string;
   liked: boolean;
   user: User;
   blog: Blog;

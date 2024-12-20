@@ -1,10 +1,12 @@
-import { Author, Blog } from './blog';
+import { User } from '@prisma/client';
+import { Blog } from './blog';
+// import { User } from './user';
 
 export interface Comment {
-  _id: string;
+  id: string;
   content: string;
   imageUrl: string;
-  user: Author;
+  user: User;
   blog: Blog;
   votes: number;
   likes: number;

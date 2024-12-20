@@ -124,3 +124,30 @@ export const checkUsername = async ({
   }
   return null;
 };
+
+export const updateUsernameAndEmail = async ({
+  email,
+  username,
+  userId,
+}: {
+  username: string;
+  email: string;
+  userId: string;
+}) => {
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+    {
+      email,
+      username,
+    },
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+
+  return null;
+};

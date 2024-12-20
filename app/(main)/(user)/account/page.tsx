@@ -1,6 +1,10 @@
 'use client';
 
-import { checkUsername, getCurrentUser } from '@/api/user';
+import {
+  checkUsername,
+  getCurrentUser,
+  updateUsernameAndEmail,
+} from '@/services/user';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -23,59 +27,30 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
+import { formUpdateUsernameAndPassword } from '@/schema/form';
 
 interface SettingsPageProps {}
 
-const formUpdateUser = z.object({
-  username: z
-    .string()
-    .min(3, { message: 'Username must be at least 3 characters long.' })
-    .max(30, { message: 'Username cannot be longer than 30 characters.' })
-    .regex(/^[a-zA-Z0-9_-]+$/, {
-      message:
-        'Username can only contain letters, numbers, underscores (_), and hyphens (-).',
-    }),
-  email: z.string().email({ message: 'Invalid email address.' }),
-});
-
 const SettingsPage: FunctionComponent<SettingsPageProps> = () => {
   const [error, setError] = useState<string | null>(null);
-  const [isLoadingCheckUsername, setIsLoadingCheckUsername] = useState(false);
-  // const [username, setUsername] = useState<string | null>(null);
   const { data: currentUser } = useQuery({
     queryKey: ['currentUser', 'user'],
     queryFn: getCurrentUser,
   });
 
-  const form = useForm<z.infer<typeof formUpdateUser>>({
+  const form = useForm<z.infer<typeof formUpdateUsernameAndPassword>>({
     defaultValues: {
       username: '',
       email: '',
     },
-    resolver: zodResolver(formUpdateUser),
+    resolver: zodResolver(formUpdateUsernameAndPassword),
   });
 
   const username = useDebounce(form.watch('username'), 500);
 
-  const {
-    mutate: mutationUpdateUser,
-    isPending,
-    isSuccess,
-    isError,
-  } = useMutation({
+  const { mutate: mutationUpdateUsernameAndEmail, isPending } = useMutation({
     mutationKey: ['update-user'],
-    mutationFn: async (
-      values: z.infer<typeof formUpdateUser>,
-    ): Promise<User | null> => {
-      const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${currentUser?._id}`,
-        values,
-        {
-          withCredentials: true,
-        },
-      );
-      return response.data;
-    },
+    mutationFn: updateUsernameAndEmail,
     onError(error, variables, context) {
       console.error(error);
       if (isAxiosError(error)) {
@@ -88,10 +63,6 @@ const SettingsPage: FunctionComponent<SettingsPageProps> = () => {
       toast.success('Profile updated successfully');
       setError(null);
       queryClient.invalidateQueries({ queryKey: ['currentUser', 'user'] });
-      // queryClient.setQueriesData(
-      //   { queryKey: ['currentUser', data?._id] },
-      //   data,
-      // );
     },
   });
 
@@ -112,11 +83,15 @@ const SettingsPage: FunctionComponent<SettingsPageProps> = () => {
       },
     });
 
-  const onSubmit = async (values: z.infer<typeof formUpdateUser>) => {
-    mutationUpdateUser({
-      email: values.email,
-      username: `@${values.username}`,
-    });
+  const onSubmit = async (
+    values: z.infer<typeof formUpdateUsernameAndPassword>,
+  ) => {
+    if (currentUser)
+      mutationUpdateUsernameAndEmail({
+        email: values.email,
+        username: `@${values.username}`,
+        userId: currentUser.id,
+      });
   };
 
   useEffect(() => {
@@ -127,10 +102,10 @@ const SettingsPage: FunctionComponent<SettingsPageProps> = () => {
   }, [form, currentUser]);
 
   useEffect(() => {
-    if (username && currentUser?._id) {
+    if (username && currentUser?.id) {
       mutationCheckUsername({
         username: `@${username}`,
-        userId: currentUser?._id,
+        userId: currentUser?.id,
       });
     }
 

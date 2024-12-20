@@ -2,7 +2,7 @@ import { Blog } from './blog';
 import { User } from './user';
 
 export interface Share {
-  _id: string;
+  id: string;
   shared: boolean;
   user: User;
   blog: Blog;

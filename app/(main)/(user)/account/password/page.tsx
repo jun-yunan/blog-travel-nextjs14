@@ -1,6 +1,6 @@
 'use client';
 
-import { updateUserPassword } from '@/api/user';
+import { updateUserPassword } from '@/services/user';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -58,7 +58,7 @@ const PasswordPage: FunctionComponent<PasswordPageProps> = () => {
   });
 
   const onSubmit = (data: z.infer<typeof formPassword>) => {
-    updatePassword({ data, userId: user?._id || '' });
+    updatePassword({ data, userId: user?.id || '' });
   };
 
   return (

@@ -49,3 +49,15 @@ export const formCreateBlog = z.object({
   content: z.string(),
   tags: z.string().optional(),
 });
+
+export const formUpdateUsernameAndPassword = z.object({
+  username: z
+    .string()
+    .min(3, { message: 'Username must be at least 3 characters long.' })
+    .max(30, { message: 'Username cannot be longer than 30 characters.' })
+    .regex(/^[a-zA-Z0-9_-]+$/, {
+      message:
+        'Username can only contain letters, numbers, underscores (_), and hyphens (-).',
+    }),
+  email: z.string().email({ message: 'Invalid email address.' }),
+});

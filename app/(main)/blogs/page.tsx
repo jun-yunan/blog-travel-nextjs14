@@ -3,7 +3,7 @@
 import { FunctionComponent } from 'react';
 import BlogOutstanding from './_components/blog-outstanding';
 import { useQuery } from '@tanstack/react-query';
-import { getAllBlog } from '@/api/blog';
+import { getAllBlog } from '@/services/blog';
 import { Loader2 } from 'lucide-react';
 import BlogItem from './_components/blog-item';
 
@@ -37,7 +37,7 @@ const BlogsPage: FunctionComponent<BlogsPageProps> = () => {
         {isSuccess &&
           blogs &&
           blogs.length > 0 &&
-          blogs.map((blog) => <BlogItem key={blog._id} blog={blog} />)}
+          blogs.map((blog) => <BlogItem key={blog.id} blog={blog} />)}
       </div>
     </div>
   );

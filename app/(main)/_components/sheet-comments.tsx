@@ -12,7 +12,7 @@ import { Comment } from '@/types/comment';
 import React, { useEffect, useRef } from 'react';
 import CommentField, { EditorValue } from './comment-field';
 import { useMutation } from '@tanstack/react-query';
-import { createComment } from '@/api/comment';
+import { createComment } from '@/services/comment';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { queryClient } from '@/providers/tanstack-query-provider';
@@ -98,8 +98,8 @@ export function SheetComments({
             <ScrollArea className="w-full h-full flex flex-col items-start gap-y-10">
               {comments.map((comment) => (
                 <CommentItem
-                  key={comment._id}
-                  isAuthorComment={user._id === author._id}
+                  key={comment.id}
+                  isAuthorComment={user.id === author.id}
                   comment={comment}
                 />
               ))}
