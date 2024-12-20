@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Comment } from '@/types/comment';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User } from 'lucide-react';
 import { FunctionComponent } from 'react';
 
 import { format } from 'date-fns';
@@ -28,16 +28,29 @@ const CommentItem: FunctionComponent<CommentItemProps> = ({
   return (
     <div className="w-full flex flex-col items-start">
       <div className="w-full flex items-start gap-x-2">
-        <Avatar>
-          <AvatarImage
-            src={comment.user.imageUrl}
-            alt={comment.user.username}
-            className="object-cover"
-          />
-          <AvatarFallback>
-            <Loader2 className="animate-spin" />
-          </AvatarFallback>
-        </Avatar>
+        {comment.user.imageUrl ? (
+          <Avatar>
+            <AvatarImage
+              src={comment.user.imageUrl}
+              alt={comment.user.username}
+              className="object-cover"
+            />
+            <AvatarFallback>
+              <Loader2 className="animate-spin" />
+            </AvatarFallback>
+          </Avatar>
+        ) : (
+          <Avatar>
+            <AvatarImage
+              src=""
+              alt={comment.user.username}
+              className="object-cover"
+            />
+            <AvatarFallback>
+              <User />
+            </AvatarFallback>
+          </Avatar>
+        )}
         <Card className="flex w-full p-2 flex-col items-start justify-around">
           {isAuthorComment && <Badge variant="outline">Author</Badge>}
           <Link
