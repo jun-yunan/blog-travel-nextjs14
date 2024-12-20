@@ -1,12 +1,11 @@
 import { swagger } from '@elysiajs/swagger';
 import { cors } from '@elysiajs/cors';
 import { jwt } from '@elysiajs/jwt';
-import { Elysia, t } from 'elysia';
-import { db } from '@/lib/db';
-import bcrypt from 'bcrypt';
+import { Elysia } from 'elysia';
 import { auth } from '../_controllers/auth';
 import { blog } from '../_controllers/blog';
 import { user } from '../_controllers/user';
+import { comment } from '../_controllers/comment';
 
 const app = new Elysia({
   prefix: '/api',
@@ -22,22 +21,8 @@ const app = new Elysia({
   .get('/', () => 'Hello Elysia')
   .use(auth)
   .use(blog)
-  .use(user);
-// .group('/blogs', (app) =>
-//   app.get('/blogs', async ({ error }) => {
-//     const blogs = await db.blog.findMany({
-//       include: {
-//         author: true,
-//       },
-//     });
-
-//     if (blogs.length === 0) {
-//       return error(404, 'No blogs found');
-//     }
-
-//     return blogs;
-//   }),
-// );
+  .use(user)
+  .use(comment);
 
 export const GET = app.handle;
 export const POST = app.handle;

@@ -1,11 +1,9 @@
 import { Elysia, t } from 'elysia';
 import jwt from '@elysiajs/jwt';
-// import User from '../models/userModel';
 import fs from 'fs/promises';
 import cloudinary from 'cloudinary';
 import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
-// import Blog from '../models/blogModel';
 
 class UserController {}
 

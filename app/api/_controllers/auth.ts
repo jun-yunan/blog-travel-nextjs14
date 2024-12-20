@@ -72,7 +72,7 @@ export const auth = new Elysia()
               httpOnly: true,
               secure: process.env.NODE_ENV === 'production',
               // maxAge: 7 * 86400, //7 days
-              maxAge: 15 * 60,
+              maxAge: 30 * 60,
               sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
               domain:
                 process.env.NODE_ENV === 'production'
