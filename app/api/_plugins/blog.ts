@@ -13,10 +13,7 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-class BlogController {}
-
 export const blog = new Elysia()
-  .decorate('blogController', new BlogController())
   .use(
     jwt({
       name: 'jwt',

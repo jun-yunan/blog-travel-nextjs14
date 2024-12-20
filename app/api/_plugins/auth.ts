@@ -3,10 +3,7 @@ import jwt from '@elysiajs/jwt';
 import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
 
-class AuthController {}
-
 export const auth = new Elysia()
-  .decorate('authController', new AuthController())
   .use(
     jwt({
       name: 'jwt',

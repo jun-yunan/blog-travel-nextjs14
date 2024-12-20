@@ -5,8 +5,6 @@ import cloudinary from 'cloudinary';
 import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
 
-class UserController {}
-
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -14,7 +12,6 @@ cloudinary.v2.config({
 });
 
 export const user = new Elysia()
-  .decorate('userController', new UserController())
   .use(
     jwt({
       name: 'jwt',
