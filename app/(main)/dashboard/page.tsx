@@ -5,6 +5,7 @@ import Link from 'next/link';
 import CardTravelAdvice from './_components/card-travel-advice';
 import CardExplore from './_components/card-explore';
 import CarouselTravel from './_components/carousel-travel';
+import { Button } from '@/components/ui/button';
 
 interface DashboardPageProps {}
 
@@ -22,7 +23,7 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
           priority
         />
         <Image
-          className="absolute z-10 right-[12%] bottom-0 w-[280px] h-[700px] object-cover"
+          className="absolute z-10 lg:right-[12%] -right-28 bottom-0 lg:w-[280px] h-[700px] object-cover"
           src="/images/thap-nghien.png"
           alt=""
           width={280}
@@ -30,14 +31,15 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
           height={700}
           priority
         />
-        <div className="flex items-start flex-wrap flex-col left-[12%] absolute top-[20%] text-[40px] font-medium leading-[66px]">
+        <div className="lg:flex items-start flex-wrap flex-col lg:left-[12%] left-4 absolute top-[20%] text-lg lg:text-4xl font-bold">
           <p>Travel. It’s the best investment</p>
           <div className="flex items-center gap-4">
             <p>you can make.</p>
-            <div className="hover:cursor-pointer rounded-md text-xl font-bold bg-purple-500 text-white py-4 px-6">
+            <div className="hover:cursor-pointer hidden lg:block rounded-md text-xl font-bold bg-purple-500 text-white lg:py-4 lg:px-6">
               EXPLORE WITH ME
             </div>
           </div>
+          <Button className="lg:hidden">EXPLORE WITH ME</Button>
         </div>
       </div>
       <div className="mt-[180px] flex items-center w-[80%] gap-x-11">

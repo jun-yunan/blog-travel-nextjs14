@@ -1,8 +1,6 @@
 import {
   Bell,
   Bookmark,
-  CreditCard,
-  Github,
   LifeBuoy,
   Loader2,
   LogOut,
@@ -10,8 +8,6 @@ import {
   NotebookPen,
   PenLine,
   Settings,
-  User,
-  User2,
   UserRound,
 } from 'lucide-react';
 
@@ -40,10 +36,10 @@ export function Account() {
   return (
     <div className="flex items-center">
       <ToggleTheme />
-      <Button variant="ghost">
+      <Button className="hidden lg:block" variant="ghost">
         <MessageCircle />
       </Button>
-      <Button variant="ghost">
+      <Button className="hidden lg:block" variant="ghost">
         <Bell />
       </Button>
       <DropdownMenu>

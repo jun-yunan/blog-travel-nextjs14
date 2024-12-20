@@ -5,6 +5,8 @@ import Header from './_components/header';
 import Footer from './_components/footer';
 import { usePathname } from 'next/navigation';
 import HeaderWriteBlog from './_components/header-write-blog';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from './_components/app-sidebar';
 
 interface LayoutMainProps {
   children: React.ReactNode;
@@ -13,7 +15,7 @@ interface LayoutMainProps {
 const LayoutMain: FunctionComponent<LayoutMainProps> = ({ children }) => {
   const pathname = usePathname();
   return (
-    <div className="w-full h-full flex flex-col items-center">
+    <div className="relative w-full h-full flex flex-col items-center overflow-x-hidden">
       {pathname === '/write-blog' ? <HeaderWriteBlog /> : <Header />}
       <main className="w-full mt-[75px] flex flex-col items-center">
         {children}

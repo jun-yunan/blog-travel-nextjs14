@@ -5,6 +5,8 @@ import { ThemeProvider } from '@/providers/theme-provider';
 import ToastProvider from '@/providers/toast-provider';
 import TanstackQueryProvider from '@/providers/tanstack-query-provider';
 import { ClerkProvider } from '@clerk/nextjs';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from './(main)/_components/app-sidebar';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
