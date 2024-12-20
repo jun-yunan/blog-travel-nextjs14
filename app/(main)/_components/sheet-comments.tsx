@@ -18,7 +18,6 @@ import { toast } from 'react-toastify';
 import { queryClient } from '@/providers/tanstack-query-provider';
 import CommentItem from './comment-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Author } from '@/types/blog';
 import { User } from '@/types/user';
 import { blogStore } from '@/store/blogStore';
 
@@ -26,7 +25,7 @@ interface SheetCommentsProps {
   children?: React.ReactNode;
   comments: Comment[];
   blogId: string;
-  author: Author;
+  author: User;
   user: User;
 }
 
@@ -41,12 +40,7 @@ export function SheetComments({
 
   const commentEndRef = useRef<HTMLDivElement>(null);
 
-  const {
-    mutate: mutationCreateComment,
-    isPending,
-    isError,
-    isSuccess,
-  } = useMutation({
+  const { mutate: mutationCreateComment, isPending } = useMutation({
     mutationKey: ['comments', 'create'],
     mutationFn: createComment,
     onError(error, variables, context) {

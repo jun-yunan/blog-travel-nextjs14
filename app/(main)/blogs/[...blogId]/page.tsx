@@ -25,7 +25,6 @@ import ButtonInteractBlog from '../../(user)/profile/_components/button-interact
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Card } from '@/components/ui/card';
-import { Author } from '@/types/blog';
 import { Button } from '@/components/ui/button';
 import useFooterStore from '@/store/footerStore';
 import { cn } from '@/lib/utils';
@@ -36,6 +35,7 @@ import axios from 'axios';
 import { queryClient } from '@/providers/tanstack-query-provider';
 import dynamic from 'next/dynamic';
 import { blogStore } from '@/store/blogStore';
+import { User } from '@/types/user';
 
 interface BlogDetailsProps {
   params: {
@@ -128,7 +128,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
               )}
             >
               <div className="flex items-center gap-x-2">
-                <HoverCardProfile<Author> information={blog.author}>
+                <HoverCardProfile<User> information={blog.author}>
                   <Avatar className="w-11 h-11 cursor-pointer hover:opacity-75 transition-all duration-300">
                     <AvatarImage
                       src={blog.author.imageUrl}
@@ -214,7 +214,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
             </div>
             <div className="w-full flex justify-between items-center">
               <div className="flex items-center gap-x-2">
-                <HoverCardProfile<Author> information={blog.author}>
+                <HoverCardProfile<User> information={blog.author}>
                   <Avatar className="w-11 h-11 cursor-pointer hover:opacity-75 transition-all duration-300">
                     <AvatarImage
                       src={blog.author.imageUrl}

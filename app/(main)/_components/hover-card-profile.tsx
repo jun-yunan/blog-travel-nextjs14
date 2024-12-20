@@ -2,7 +2,6 @@ import {
   CalendarDays,
   Check,
   Link2,
-  Loader2,
   Mail,
   MessageSquareMore,
   Plus,
@@ -19,9 +18,7 @@ import { User } from '@/types/user';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Author } from '@/types/blog';
 import { Button } from '@/components/ui/button';
-import ButtonInteractBlog from '../(user)/profile/_components/button-interact-blog';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
@@ -32,7 +29,7 @@ type HoverCardProfileProps<T> = {
   children: React.ReactNode;
   information: T;
 };
-export function HoverCardProfile<T extends User | Author>({
+export function HoverCardProfile<T extends User>({
   children,
   information,
 }: HoverCardProfileProps<T>) {
