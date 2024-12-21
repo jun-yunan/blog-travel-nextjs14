@@ -24,9 +24,11 @@ const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
     setOpenDialogDraft,
   } = blogStore();
   return (
-    <div className="fixed z-50 flex items-center justify-between px-12 w-full h-[75px]">
+    <div className="fixed lg:px-12 px-2 z-50 overflow-x-hidden inset-0 flex items-center justify-between bg-white dark:bg-gray-800 w-full h-[75px]">
       <div className="flex items-center gap-x-2">
-        <Logo />
+        <div className="hidden lg:block">
+          <Logo />
+        </div>
         <Button
           onClick={() => router.back()}
           variant="ghost"

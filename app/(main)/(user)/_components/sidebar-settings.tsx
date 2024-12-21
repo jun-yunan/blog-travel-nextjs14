@@ -47,14 +47,17 @@ const SidebarSettings: FunctionComponent<SidebarSettingsProps> = () => {
           className={cn(
             'text-base text-gray-600 dark:text-gray-400',
             item.href === pathname &&
-              'font-semibold text-black text-base dark:text-white',
+              'font-semibold text-black lg:text-base text-sm dark:text-white',
           )}
         >
           {item.name}
         </Link>
       ))}
       <Separator />
-      <Link href="/account/delete" className="text-red-600 text-base">
+      <Link
+        href="/account/delete"
+        className="text-red-600 lg:text-base text-sm"
+      >
         Delete Account
       </Link>
     </div>

@@ -35,7 +35,9 @@ export function Account() {
   });
   return (
     <div className="flex items-center">
-      <ToggleTheme />
+      <div className="hidden lg:block">
+        <ToggleTheme />
+      </div>
       <Button className="hidden lg:block" variant="ghost">
         <MessageCircle />
       </Button>

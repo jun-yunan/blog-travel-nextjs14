@@ -75,10 +75,10 @@ export function SheetComments({
   return (
     <Sheet open={openSheetComments} onOpenChange={setOpenSheetComments}>
       {children && <SheetTrigger asChild>{children}</SheetTrigger>}
-      <SheetContent className="w-[2000px] h-full flex flex-col gap-y-4">
-        <SheetHeader>
+      <SheetContent className="w-[80%] h-full flex flex-col gap-y-4">
+        <SheetHeader className="w-full flex flex-col items-start">
           <SheetTitle>Comments</SheetTitle>
-          <SheetDescription>
+          <SheetDescription className="text-start">
             Comments are a great way to interact with the author and other
             readers.
           </SheetDescription>

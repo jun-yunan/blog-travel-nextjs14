@@ -16,9 +16,9 @@ const ButtonInteractBlog: FunctionComponent<ButtonInteractBlogProps> = ({
   return (
     <Button
       onClick={onClick}
-      size="lg"
+      size="default"
       variant="ghost"
-      className="text-base font-medium rounded-full flex items-center justify-center gap-x-2"
+      className="text-base font-medium rounded-full flex items-center justify-center lg:px-6 lg:gap-x-2"
     >
       {children}
       <p>{label}</p>

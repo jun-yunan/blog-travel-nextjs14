@@ -110,15 +110,15 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
 
   return (
     <>
-      {blog && currentUser && (
-        <SheetComments
-          blogId={params.blogId}
-          comments={blog.comments}
-          author={blog.author}
-          user={currentUser}
-        />
-      )}
       <div className="my-10 w-full flex justify-center">
+        {blog && currentUser && (
+          <SheetComments
+            blogId={params.blogId}
+            comments={blog.comments}
+            author={blog.author}
+            user={currentUser}
+          />
+        )}
         <div className="lg:w-[25%] relative lg:flex flex-col items-start hidden">
           {blog && (
             <div
@@ -247,7 +247,7 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
             <div className="">
               <Renderer value={blog.content} />
             </div>
-            <div className="lg:w-[60%] w-full lg:self-start flex items-center justify-around">
+            <div className="lg:w-[60%] w-full lg:self-start flex-shrink-0 flex items-center lg:justify-around">
               <ButtonInteractBlog label="Like" onClick={handleLikeBlog}>
                 {blog.likes.some((like) => like.user.id === currentUser?.id) ? (
                   <FaHeart className="text-rose-500" />

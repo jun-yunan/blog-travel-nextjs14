@@ -15,9 +15,9 @@ interface HeaderProps {}
 const Header: FunctionComponent<HeaderProps> = () => {
   const { user, isLoading, error } = useAuth();
   return (
-    <div className="fixed z-50 overflow-x-hidden inset-0 flex items-center justify-between lg:justify-around w-full h-[75px] bg-white dark:bg-gray-800">
-      <Logo />
+    <div className="fixed z-50 overflow-x-hidden inset-0 flex items-center justify-between px-2 lg:px-0 lg:justify-around w-full h-[75px] bg-white dark:bg-gray-800">
       <NavMobile />
+      <Logo />
       <SearchHeader />
       <NavDesktop />
       {isLoading ? (

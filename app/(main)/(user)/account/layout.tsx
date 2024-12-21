@@ -33,7 +33,7 @@ const LayoutSettings: FunctionComponent<LayoutSettingsProps> = ({
     }
   }, [currentUser, setUser]);
   return (
-    <div className="w-[60%] mt-10 h-[1500px] flex flex-col items-start gap-y-8">
+    <div className="lg:w-[60%] w-full px-2 mt-10 mb-52 flex flex-col items-start gap-y-8">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-x-4">
           {currentUser?.imageUrl ? (
@@ -60,14 +60,14 @@ const LayoutSettings: FunctionComponent<LayoutSettingsProps> = ({
             <p className="text-lg font-semibold">
               {isError ? '' : currentUser?.username} {pathname}
             </p>
-            <p className="text-base font-light text-gray-600">
+            <p className="hidden lg:block text-base font-light text-gray-600">
               Update your username and manage your account
             </p>
           </div>
         </div>
-        <div className="text-white flex items-center justify-center py-2 px-6 rounded-lg bg-yellow-400 gap-x-2 cursor-pointer">
+        <div className="text-white flex items-center justify-center lg:py-2 lg:px-6 py-1 px-2 rounded-lg bg-yellow-400 gap-x-2 cursor-pointer">
           <Crown />
-          <p className="text-base font-medium">Upgrade Account</p>
+          <p className="text-sm font-medium">Upgrade</p>
         </div>
       </div>
       <div className="flex w-full justify-start">

@@ -42,7 +42,7 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
           <Button className="lg:hidden">EXPLORE WITH ME</Button>
         </div>
       </div>
-      <div className="mt-[180px] flex items-center w-[80%] gap-x-11">
+      <div className="mt-[160px] flex items-center lg:w-[80%] px-2 w-full gap-x-11">
         <div className="w-[50%] h-full flex flex-col items-start">
           <Image
             src="/images/paris.jpg"
@@ -65,10 +65,10 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
           </div>
         </div>
         <div className="w-[50%] flex flex-col h-full items-start">
-          <div className="mb-[35px] text-[32px] font-medium leading-tight">
+          <div className="lg:mb-[35px] mb-1 lg:text-3xl text-xl font-medium leading-tight">
             Recent Blogs
           </div>
-          <div className="flex flex-col items-center w-full h-full gap-y-14">
+          <div className="flex flex-col items-center w-full h-full lg:gap-y-14 gap-y-4">
             <CardBlog
               imageSrc="/images/opera-house-4338215_1920.jpg"
               title="Lorem ipsum dolor dolor sit amet, consectetur adipiscing"
@@ -84,10 +84,8 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
           </div>
         </div>
       </div>
-      <div className="mt-[164px] w-[80%] flex flex-col items-center gap-y-14">
-        <div className="text-[64px] font-bold leading-[50px]">
-          Travel Advice
-        </div>
+      <div className="mt-[160px] w-[80%] flex flex-col items-center gap-y-14">
+        <div className="lg:text-6xl text-5xl font-bold">Travel Advice</div>
         <div className="flex w-full items-center justify-center gap-x-9">
           <CardTravelAdvice
             imageSrc="/images/f71410171fe181b5b12b5ba671165149.jpg"
@@ -110,19 +108,17 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
             description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum in vel massa donec sit."
           />
         </div>
-        <div className="self-end">
+        <div className="lg:self-end self-center">
           <Link
             href=""
-            className="text-2xl font-normal hover:underline leading-tight"
+            className="lg:text-2xl text-xl font-normal hover:underline leading-tight"
           >
             CHECK ALL TRAVEL ADVICE
           </Link>
         </div>
       </div>
       <div className="mt-[177px] w-full flex flex-col items-center gap-y-12">
-        <div className="text-[64px] font-bold leading-[50px]">
-          Explore By Style
-        </div>
+        <div className="lg:text-6xl text-5xl font-bold">Explore By Style</div>
         <div className="flex items-center w-full">
           <CardExplore
             imageSrc="/images/pexels-thatguycraig000-1563356.jpg"
@@ -141,17 +137,17 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
           />
         </div>
       </div>
-      <div className="mt-[224px] w-[80%] flex flex-col items-start gap-y-11">
-        <div className="text-[64px] font-bold leading-[50px]">Destinations</div>
+      <div className="mt-[160px] lg:w-[80%] w-full px-2 flex flex-col items-start gap-y-11">
+        <div className="lg:text-6xl text-5xl font-bold">Destinations</div>
         <CarouselTravel />
       </div>
-      <div className="mt-[224px] w-[80%] flex items-center gap-x-8">
+      <div className="mt-[160px] lg:w-[80%] w-full px-4 flex lg:flex-row flex-col items-center gap-x-8">
         <Image
           src="/images/author.png"
           alt=""
           width={680}
           height={620}
-          className="object-cover w-[680px] h-[620px] flex-shrink-0"
+          className="object-cover lg:w-[680px] lg:h-[620px] flex-shrink-0"
         />
         <div className="flex flex-col items-start gap-y-4">
           <div className="flex flex-col gap-y-1">
@@ -167,7 +163,7 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
           </div>
           <Link
             href=""
-            className="hover:underline text-xl font-normal leading-tight"
+            className="hover:underline text-blue-500 text-xl font-normal leading-tight"
           >
             Read More...
           </Link>

@@ -61,9 +61,9 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
   return (
     <>
       <DialogDeleteBlog username={username} />
-      <div className="w-[70%] mb-10">
+      <div className="lg:w-[70%] w-full mb-10">
         <Card className="w-full overflow-hidden flex flex-col items-start gap-y-10">
-          <div className="relative w-full h-[300px]">
+          <div className="relative w-full lg:h-[300px] h-[200px] flex-shrink-0">
             <Image
               src="/images/pexels-binh-ho-image-355440-1018478.jpg"
               alt=""
@@ -71,9 +71,9 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
               height={1080}
               className="w-full h-full object-cover flex-shrink-0"
             />
-            <div className="absolute -bottom-[0px] left-[75px] gap-x-4 flex items-center">
+            <div className="absolute -bottom-[0px] lg:left-[75px] left-0 gap-x-4 flex items-center">
               {user?.imageUrl ? (
-                <Avatar className="w-[150px] h-[150px] border-4 border-white">
+                <Avatar className="lg:w-[150px] lg:h-[150px] w-[100px] h-[100px] border-4 border-white">
                   <AvatarImage
                     src={user.imageUrl}
                     alt={`@${user.username}`}
@@ -84,7 +84,7 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
                   </AvatarFallback>
                 </Avatar>
               ) : (
-                <Avatar className="w-[150px] h-[150px]">
+                <Avatar className="lg:w-[150px] lg:h-[150px] w-[100px] h-[100px]">
                   <AvatarImage className="object-cover" />
                   <AvatarFallback>
                     <UserRound />
@@ -94,13 +94,15 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
             </div>
           </div>
           <div className="pb-4 w-full h-[88px] flex items-center justify-between">
-            <div className="w-[500px] gap-y-2 pl-[75px] overflow-hidden flex flex-col items-start">
-              <p className="text-3xl font-semibold">{user?.username}</p>
+            <div className="lg:w-[500px] gap-y-2 p-2 lg:p-0 lg:pl-[75px] overflow-hidden flex flex-col items-start">
+              <p className="lg:text-3xl text-lg font-semibold">
+                {user?.username}
+              </p>
               <ScrollArea className="w-full h-[88px]">
-                <p className="">{user?.bio}</p>
+                <p className="text-sm">{user?.bio}</p>
               </ScrollArea>
             </div>
-            <div className="flex items-center gap-x-4 px-4">
+            <div className="flex lg:flex-row flex-col items-center gap-4 px-4">
               <Button
                 variant="outline"
                 onClick={() => router.push('/write-blog')}
@@ -120,7 +122,7 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
             </div>
           </div>
         </Card>
-        <div className="mt-10 flex w-full h-full gap-x-6 ">
+        <div className="mt-10 flex w-full h-full gap-x-6 px-4">
           <div className="w-[40%] lg:flex flex-col gap-y-4 hidden">
             <Card>
               <CardHeader>

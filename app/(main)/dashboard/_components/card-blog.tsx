@@ -15,7 +15,7 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({
   href,
 }) => {
   return (
-    <Card className="flex w-full gap-x-7 shadow">
+    <Card className="flex lg:flex-row flex-col w-full gap-x-7 shadow">
       <Image
         src={imageSrc}
         className="object-cover w-[260px] h-[160px] cursor-pointer flex-shrink-0 hover:scale-105 hover:opacity-75 transition-all duration-300 rounded-md"
@@ -23,14 +23,17 @@ const CardBlog: FunctionComponent<CardBlogProps> = ({
         height={160}
         alt=""
       />
-      <div className="flex flex-col h-full items-start justify-around">
+      <div className="flex flex-col lg:p-0 p-2 h-full items-start justify-around">
         <Link
           href={href || ''}
           className=" text-base font-semibold leading-tight hover:underline"
         >
           {title}
         </Link>
-        <Link href={href || ''} className="text-sm font-light leading-tight">
+        <Link
+          href={href || ''}
+          className="text-sm text-blue-500 font-light hover:underline"
+        >
           Read more
         </Link>
       </div>

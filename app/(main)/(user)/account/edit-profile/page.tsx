@@ -117,7 +117,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
               </AvatarFallback>
             </Avatar>
           )}
-          <div className="flex items-center gap-x-4">
+          <div className="flex lg:items-center items-start lg:flex-row flex-col gap-4">
             <Button
               variant="outline"
               onClick={() => setOpenDialogUploadImage(true)}
@@ -143,7 +143,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                   <FormLabel className="text-base">Name</FormLabel>
                   <FormControl>
                     <Input
-                      className="w-full h-[44px] text-lg"
+                      className="w-full h-[44px] lg:text-base text-sm"
                       type="text"
                       placeholder=""
                       {...field}
@@ -168,7 +168,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                   <FormLabel className="text-base">Location</FormLabel>
                   <FormControl>
                     <Input
-                      className="w-full h-[44px] text-lg"
+                      className="w-full h-[44px] lg:text-base text-sm"
                       type="text"
                       placeholder=""
                       {...field}
@@ -192,7 +192,12 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                 <FormItem>
                   <FormLabel className="text-base">Bio</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="" {...field} rows={5} />
+                    <Textarea
+                      className="text-base"
+                      placeholder=""
+                      {...field}
+                      rows={5}
+                    />
                   </FormControl>
                   <FormDescription>
                     Briefly describe yourself in a few words.{' '}
@@ -214,7 +219,7 @@ const EditProfile: FunctionComponent<EditProfileProps> = () => {
                   <FormLabel className="text-base">Personal Website</FormLabel>
                   <FormControl>
                     <Input
-                      className="h-[44px] text-lg"
+                      className="h-[44px] lg:text-base text-sm"
                       type="text"
                       placeholder=""
                       {...field}

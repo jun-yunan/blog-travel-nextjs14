@@ -8,7 +8,7 @@ const Logo: FunctionComponent<LogoProps> = () => {
   return (
     <Link
       href="/dashboard"
-      className="hidden lg:flex animate-pulse items-center justify-center"
+      className="flex animate-pulse items-center justify-center"
     >
       <p className="text-xl font-semibold tracking-wide">NAKIET</p>
     </Link>
