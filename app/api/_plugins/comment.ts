@@ -68,7 +68,7 @@ export const comment = new Elysia()
 
             const pathImage = path.join(
               `${process.cwd()}`,
-              'temp',
+              'tmp',
               `${identity.id}-${blogId}-${uuidv4()}.jpg`,
             );
 

@@ -86,7 +86,7 @@ export const user = new Elysia()
             }
 
             const bytes = await file.arrayBuffer();
-            const filePath = `${process.cwd()}/temp/${Date.now()}-${
+            const filePath = `${process.cwd()}/tmp/${Date.now()}-${
               identity.id
             }-${file.name}`;
             await fs.writeFile(filePath, new Uint8Array(bytes));

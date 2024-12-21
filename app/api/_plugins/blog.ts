@@ -132,7 +132,7 @@ export const blog = new Elysia()
 
             if (base64Images.length !== 0) {
               base64Images.forEach((base64Image, index) => {
-                const outputFilePath = `${process.cwd()}/temp/${
+                const outputFilePath = `${process.cwd()}/tmp/${
                   user.id
                 }-${Date.now()}-${uuidv4()}.png`;
                 convertBase64ToImage(base64Image, outputFilePath);
@@ -190,7 +190,7 @@ export const blog = new Elysia()
               const buffers = new Uint8Array(bytes);
               const pathCoverImage = path.join(
                 process.cwd(),
-                'temp',
+                'tmp',
                 uuidv4() + coverImage.name,
               );
               fs.writeFileSync(pathCoverImage, buffers);
