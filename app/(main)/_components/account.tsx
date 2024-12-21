@@ -26,6 +26,11 @@ import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/services/user';
 import { Button } from '@/components/ui/button';
 import { ToggleTheme } from './toggle-theme';
+import { logout } from '@/services/auth';
+import { toast } from 'react-toastify';
+import { t } from 'elysia';
+import { DialogSignOut } from '@/app/(auth_old)/_components/dialog-sign-out';
+import { useState } from 'react';
 
 export function Account() {
   const router = useRouter();
@@ -33,84 +38,104 @@ export function Account() {
     queryKey: ['currentUser', 'user'],
     queryFn: getCurrentUser,
   });
+
+  const [open, setOpen] = useState(false);
+
+  const handleLogout = async () => {
+    await fetch('/api/auth/sign-out', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then(() => {
+        toast.success('Logout successfully');
+        router.push('/sign-in');
+      })
+      .catch(() => {
+        toast.error('Logout failed');
+      });
+  };
+
   return (
-    <div className="flex items-center">
-      <div className="hidden lg:block">
-        <ToggleTheme />
+    <>
+      <DialogSignOut open={open} setOpen={setOpen} onClick={handleLogout} />
+      <div className="flex items-center">
+        <div className="hidden lg:block">
+          <ToggleTheme />
+        </div>
+        <Button className="hidden lg:block" variant="ghost">
+          <MessageCircle />
+        </Button>
+        <Button className="hidden lg:block" variant="ghost">
+          <Bell />
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            {user?.imageUrl ? (
+              <Avatar>
+                <AvatarImage
+                  className="object-cover"
+                  src={user.imageUrl}
+                  alt={`@${user.username}`}
+                />
+                <AvatarFallback>
+                  <Loader2 className="animate-spin" />
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <Avatar>
+                <AvatarImage src="" alt={`@${user?.username}`} />
+                <AvatarFallback>
+                  <UserRound />
+                </AvatarFallback>
+              </Avatar>
+            )}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>{user?.email || 'My Account'}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => router.push(`/profile/${user?.username}`)}
+            >
+              <UserRound />
+              <span>Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => router.push('/write-blog')}>
+                <PenLine />
+                <span>Write blog</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <NotebookPen />
+                <span>My blog</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Bookmark />
+                <span>Saved blog</span>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                // router.prefetch('/accounts');
+                router.push('/account');
+              }}
+            >
+              <Settings />
+              <span>Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <LifeBuoy />
+              <span>Support</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setOpen(true)}>
+              <LogOut />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-      <Button className="hidden lg:block" variant="ghost">
-        <MessageCircle />
-      </Button>
-      <Button className="hidden lg:block" variant="ghost">
-        <Bell />
-      </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          {user?.imageUrl ? (
-            <Avatar>
-              <AvatarImage
-                className="object-cover"
-                src={user.imageUrl}
-                alt={`@${user.username}`}
-              />
-              <AvatarFallback>
-                <Loader2 className="animate-spin" />
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <Avatar>
-              <AvatarImage src="" alt={`@${user?.username}`} />
-              <AvatarFallback>
-                <UserRound />
-              </AvatarFallback>
-            </Avatar>
-          )}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>{user?.email || 'My Account'}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => router.push(`/profile/${user?.username}`)}
-          >
-            <UserRound />
-            <span>Profile</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push('/write-blog')}>
-              <PenLine />
-              <span>Write blog</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <NotebookPen />
-              <span>My blog</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bookmark />
-              <span>Saved blog</span>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              // router.prefetch('/accounts');
-              router.push('/account');
-            }}
-          >
-            <Settings />
-            <span>Settings</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <LifeBuoy />
-            <span>Support</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => {}}>
-            <LogOut />
-            <span>Log out</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    </>
   );
 }

@@ -119,73 +119,73 @@ export const user = new Elysia()
           }
         },
       )
-      .put(
-        '/me/update-password',
-        async ({ body, jwt, cookie: { auth }, error }) => {
-          try {
-            const { oldPassword, newPassword } = body;
+      // .put(
+      //   '/me/update-password',
+      //   async ({ body, jwt, cookie: { auth }, error }) => {
+      //     try {
+      //       const { oldPassword, newPassword } = body;
 
-            if (!oldPassword || !newPassword) {
-              return error(400, 'Missing oldPassword or newPassword');
-            }
+      //       if (!oldPassword || !newPassword) {
+      //         return error(400, 'Missing oldPassword or newPassword');
+      //       }
 
-            const identity = await jwt.verify(auth.value);
+      //       const identity = await jwt.verify(auth.value);
 
-            if (!identity) {
-              return error(401, 'Unauthorized');
-            }
+      //       if (!identity) {
+      //         return error(401, 'Unauthorized');
+      //       }
 
-            const user = await db.user.findUnique({
-              where: { id: identity.id as string },
-            });
+      //       const user = await db.user.findUnique({
+      //         where: { id: identity.id as string },
+      //       });
 
-            if (!user) {
-              return error(404, 'User not found');
-            }
+      //       if (!user) {
+      //         return error(404, 'User not found');
+      //       }
 
-            const correctPassword = await bcrypt.compare(
-              oldPassword,
-              user.password,
-            );
+      //       const correctPassword = await bcrypt.compare(
+      //         oldPassword,
+      //         user.password,
+      //       );
 
-            if (!correctPassword) {
-              return error(401, 'Incorrect old password');
-            }
+      //       if (!correctPassword) {
+      //         return error(401, 'Incorrect old password');
+      //       }
 
-            if (oldPassword === newPassword) {
-              return error(
-                400,
-                'New password must be different from old password',
-              );
-            }
+      //       if (oldPassword === newPassword) {
+      //         return error(
+      //           400,
+      //           'New password must be different from old password',
+      //         );
+      //       }
 
-            const hashNewPassword = await bcrypt.hash(newPassword, 10);
+      //       const hashNewPassword = await bcrypt.hash(newPassword, 10);
 
-            const updatedUser = await db.user.update({
-              where: { id: identity.id as string },
-              data: {
-                password: hashNewPassword,
-              },
-            });
+      //       const updatedUser = await db.user.update({
+      //         where: { id: identity.id as string },
+      //         data: {
+      //           password: hashNewPassword,
+      //         },
+      //       });
 
-            if (!updatedUser) {
-              return error(500, 'Update failed');
-            }
+      //       if (!updatedUser) {
+      //         return error(500, 'Update failed');
+      //       }
 
-            return { status: 'success', user: updatedUser };
-          } catch (err) {
-            console.log(err);
+      //       return { status: 'success', user: updatedUser };
+      //     } catch (err) {
+      //       console.log(err);
 
-            return error(500, "Something's wrong");
-          }
-        },
-        {
-          body: t.Object({
-            oldPassword: t.String(),
-            newPassword: t.String(),
-          }),
-        },
-      )
+      //       return error(500, "Something's wrong");
+      //     }
+      //   },
+      //   {
+      //     body: t.Object({
+      //       oldPassword: t.String(),
+      //       newPassword: t.String(),
+      //     }),
+      //   },
+      // )
       .get(
         '/check-username',
         async ({ jwt, query, error, cookie: { auth } }) => {
