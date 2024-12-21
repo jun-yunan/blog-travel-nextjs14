@@ -48,9 +48,8 @@ const NavMobile: FunctionComponent<NavMobileProps> = () => {
           <div className="w-full h-full justify-between flex flex-col">
             <div className="w-full flex flex-col gap-y-4">
               {listNav.map((item, index) => (
-                <SheetClose asChild>
+                <SheetClose key={index} asChild>
                   <Link
-                    key={index}
                     href={item.href}
                     className={cn(
                       'text-base font-medium',
