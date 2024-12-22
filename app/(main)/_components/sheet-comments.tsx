@@ -27,6 +27,7 @@ interface SheetCommentsProps {
   blogId: string;
   author: User;
   user: User;
+  username?: string;
 }
 
 export function SheetComments({
@@ -35,6 +36,7 @@ export function SheetComments({
   blogId,
   author,
   user,
+  username,
 }: SheetCommentsProps) {
   const { openSheetComments, setOpenSheetComments } = blogStore();
 
@@ -55,6 +57,9 @@ export function SheetComments({
     onSuccess(data, variables, context) {
       // toast.success('Comment created successfully.');
       queryClient.invalidateQueries({ queryKey: ['blog', blogId] });
+      queryClient.invalidateQueries({
+        queryKey: ['blogs-by-username', username],
+      });
     },
   });
 
@@ -93,6 +98,7 @@ export function SheetComments({
               {comments.map((comment) => (
                 <CommentItem
                   key={comment.id}
+                  blogId={blogId}
                   isAuthorComment={user.id === author.id}
                   comment={comment}
                 />

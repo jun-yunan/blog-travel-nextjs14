@@ -21,10 +21,14 @@ import { DialogDeleteBlog } from './dialog-delete-blog';
 import { HoverCardProfile } from '@/app/(main)/_components/hover-card-profile';
 import ButtonInteractBlog from './button-interact-blog';
 import Link from 'next/link';
+import { SheetComments } from '@/app/(main)/_components/sheet-comments';
+import { User } from '@/types/user';
 
 interface CardBlogProfileProps {
   blog: Blog;
   username: string;
+  isCurrentUser: boolean;
+  currentUser: User;
 }
 
 const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
@@ -34,10 +38,19 @@ const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
 const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
   blog,
   username,
+  currentUser,
+  isCurrentUser,
 }) => {
   return (
     <>
       {/* <DialogDeleteBlog username={username} /> */}
+      {/* <SheetComments
+        comments={blog.comments}
+        user={currentUser}
+        blogId={blog.id}
+        author={blog.author}
+      /> */}
+
       <Card className="w-full overflow-hidden flex flex-col">
         <div className="w-full flex items-center justify-between p-5">
           <div className="flex items-center gap-x-3">
@@ -73,9 +86,11 @@ const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
               </p>
             </div>
           </div>
-          <DropdownMenuBlog blogId={blog.id}>
-            <EllipsisVertical className="h-5 w-5" />
-          </DropdownMenuBlog>
+          {isCurrentUser && (
+            <DropdownMenuBlog blogId={blog.id}>
+              <EllipsisVertical className="h-5 w-5" />
+            </DropdownMenuBlog>
+          )}
         </div>
         <CardContent className="min-h-[100px] gap-y-4 flex flex-col items-start">
           <CardTitle>{blog.title}</CardTitle>
@@ -104,9 +119,17 @@ const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
           <ButtonInteractBlog label="Like" onClick={() => {}}>
             <Heart />
           </ButtonInteractBlog>
-          <ButtonInteractBlog label="Comment" onClick={() => {}}>
-            <MessageCircle />
-          </ButtonInteractBlog>
+          <SheetComments
+            comments={blog.comments}
+            user={currentUser}
+            blogId={blog.id}
+            author={blog.author}
+            username={username}
+          >
+            <ButtonInteractBlog label="Comment" onClick={() => {}}>
+              <MessageCircle />
+            </ButtonInteractBlog>
+          </SheetComments>
           <ButtonInteractBlog label="Share" onClick={() => {}}>
             <Share />
           </ButtonInteractBlog>

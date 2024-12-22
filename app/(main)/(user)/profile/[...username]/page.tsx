@@ -5,7 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useQuery } from '@tanstack/react-query';
 import {
   Loader2,
+  MessageSquareMore,
   PencilLine,
+  UserPlus,
   UserRound,
   UserRoundPen,
   UsersRound,
@@ -19,6 +21,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { getCurrentUser, getUserByUsername } from '@/services/user';
 import CardBlogProfile from '../_components/card-blog-profile';
 import { DialogDeleteBlog } from '../_components/dialog-delete-blog';
+import { SheetComments } from '@/app/(main)/_components/sheet-comments';
 
 interface ProfileByUsernameProps {
   params: {
@@ -57,6 +60,11 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
     queryKey: ['blogs-by-username', username],
     queryFn: () => getAllBlogByUsername({ username }),
   });
+
+  const isCurrentUser = useMemo(
+    () => currentUser && user && currentUser?.id === user?.id,
+    [currentUser, user],
+  );
 
   return (
     <>
@@ -103,22 +111,36 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
               </ScrollArea>
             </div>
             <div className="flex lg:flex-row flex-col items-center gap-4 px-4">
-              <Button
-                variant="outline"
-                onClick={() => router.push('/write-blog')}
-                className="rounded-lg"
-              >
-                <PencilLine />
-                <p>Write Blog</p>
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => router.push('/account/edit-profile')}
-                className="rounded-lg"
-              >
-                <UserRoundPen />
-                <p> Edit Profile</p>
-              </Button>
+              {isCurrentUser ? (
+                <Button
+                  variant="outline"
+                  onClick={() => router.push('/write-blog')}
+                  className="rounded-lg"
+                >
+                  <PencilLine />
+                  <p>Write Blog</p>
+                </Button>
+              ) : (
+                <Button>
+                  <UserPlus />
+                  <p>Add Friend</p>
+                </Button>
+              )}
+              {isCurrentUser ? (
+                <Button
+                  variant="outline"
+                  onClick={() => router.push('/account/edit-profile')}
+                  className="rounded-lg"
+                >
+                  <UserRoundPen />
+                  <p>Edit Profile</p>
+                </Button>
+              ) : (
+                <Button variant="outline">
+                  <MessageSquareMore />
+                  <p>Message</p>
+                </Button>
+              )}
             </div>
           </div>
         </Card>
@@ -143,9 +165,15 @@ const ProfileByUsername: FunctionComponent<ProfileByUsernameProps> = ({
             </Card>
           </div>
           <div className="lg:w-[60%] w-full flex flex-col gap-y-6">
-            {!!blogs && blogs.length !== 0 ? (
+            {!!blogs && currentUser && blogs.length !== 0 ? (
               blogs.map((blog, index) => (
-                <CardBlogProfile key={index} blog={blog} username={username} />
+                <CardBlogProfile
+                  isCurrentUser={currentUser?.id === user?.id}
+                  currentUser={currentUser}
+                  key={index}
+                  blog={blog}
+                  username={username}
+                />
               ))
             ) : isLoading ? (
               <Card className="animate-pulse w-full flex flex-col items-start gap-y-6 p-6">

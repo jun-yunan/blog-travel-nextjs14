@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import cloudinary from 'cloudinary';
 import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
+import { auth } from '@clerk/nextjs/server';
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -22,16 +23,18 @@ export const user = new Elysia()
     app
       .get(
         '/:userId',
-        async ({ jwt, cookie: { auth }, error, params }) => {
+        async ({ error, params }) => {
           try {
             const { userId } = params;
             if (!userId) {
               return error(400, 'Missing userId');
             }
-            const identity = await jwt.verify(auth.value);
+
+            const { userId: identity } = await auth();
             if (!identity) {
               return error(401, 'Unauthorized');
             }
+
             const user = await db.user.findUnique({
               where: { id: userId },
             });
@@ -49,18 +52,22 @@ export const user = new Elysia()
           params: t.Object({ userId: t.String() }),
         },
       )
-      .get('/me', async ({ jwt, cookie: { auth }, error }) => {
+      .get('/me', async ({ error }) => {
         try {
-          const identity = await jwt.verify(auth.value);
-          if (!identity) {
+          const { userId: clerkId } = await auth();
+
+          if (!clerkId) {
             return error(401, 'Unauthorized');
           }
+
           const user = await db.user.findUnique({
-            where: { id: identity.id as string },
+            where: { clerkId },
           });
+
           if (!user) {
             return error(404, 'User not found');
           }
+
           return user;
         } catch (err) {
           console.log(err);
@@ -68,57 +75,62 @@ export const user = new Elysia()
           return error(500, "Something's wrong");
         }
       })
-      .post(
-        '/me/update-avatar',
-        async ({ jwt, cookie: { auth }, error, request }) => {
-          try {
-            const data = await request.formData();
-            const file: File | null = data.get('image') as unknown as File;
+      .post('/me/update-avatar', async ({ error, request }) => {
+        try {
+          const data = await request.formData();
+          const file: File | null = data.get('image') as unknown as File;
 
-            if (!file || file.size === 0) {
-              return error(400, 'Missing image');
-            }
-
-            const identity = await jwt.verify(auth.value);
-
-            if (!identity) {
-              return error(401, 'Unauthorized');
-            }
-
-            const bytes = await file.arrayBuffer();
-            const filePath = `${process.cwd()}/tmp/${Date.now()}-${
-              identity.id
-            }-${file.name}`;
-            await fs.writeFile(filePath, new Uint8Array(bytes));
-
-            const upload = await cloudinary.v2.uploader.upload(filePath, {
-              folder: 'avatars',
-              use_filename: true,
-            });
-
-            if (!upload) {
-              return error(500, 'Upload failed');
-            }
-
-            await fs.unlink(filePath);
-
-            const user = await db.user.update({
-              where: { id: identity.id as string },
-              data: {
-                imageUrl: upload.secure_url,
-              },
-            });
-            if (!user) {
-              return error(500, 'Update failed');
-            }
-
-            return { status: 'success', url: upload.secure_url, user, bytes };
-          } catch (err) {
-            console.log(err);
-            return error(500, "Something's wrong");
+          if (!file || file.size === 0) {
+            return error(400, 'Missing image');
           }
-        },
-      )
+
+          const { userId } = await auth();
+
+          if (!userId) {
+            return error(401, 'Unauthorized');
+          }
+
+          const currentUser = await db.user.findUnique({
+            where: { clerkId: userId },
+          });
+
+          if (!currentUser) {
+            return error(404, 'User not found');
+          }
+
+          const bytes = await file.arrayBuffer();
+          const filePath = `${process.cwd()}/tmp/${Date.now()}-${
+            currentUser.id
+          }-${file.name}`;
+          await fs.writeFile(filePath, new Uint8Array(bytes));
+
+          const upload = await cloudinary.v2.uploader.upload(filePath, {
+            folder: 'avatars',
+            use_filename: true,
+          });
+
+          if (!upload) {
+            return error(500, 'Upload failed');
+          }
+
+          await fs.unlink(filePath);
+
+          const user = await db.user.update({
+            where: { id: currentUser.id },
+            data: {
+              imageUrl: upload.secure_url,
+            },
+          });
+          if (!user) {
+            return error(500, 'Update failed');
+          }
+
+          return { status: 'success', url: upload.secure_url, user, bytes };
+        } catch (err) {
+          console.log(err);
+          return error(500, "Something's wrong");
+        }
+      })
       // .put(
       //   '/me/update-password',
       //   async ({ body, jwt, cookie: { auth }, error }) => {
@@ -188,22 +200,22 @@ export const user = new Elysia()
       // )
       .get(
         '/check-username',
-        async ({ jwt, query, error, cookie: { auth } }) => {
+        async ({ query, error }) => {
           try {
             const { userId, username } = query;
             if (!userId || !username) {
               return error(400, 'Missing userId or username');
             }
 
-            const identity = await jwt.verify(auth.value);
+            const { userId: clerkId } = await auth();
 
-            if (!identity) {
+            if (!clerkId) {
               return error(401, 'Unauthorized');
             }
 
             const user = await db.user.findUnique({
               where: {
-                id: userId,
+                clerkId,
               },
             });
 
@@ -235,7 +247,7 @@ export const user = new Elysia()
       )
       .put(
         '/:userId',
-        async ({ jwt, cookie: { auth }, error, params, body }) => {
+        async ({ error, params, body }) => {
           try {
             const { userId } = params;
 
@@ -253,9 +265,9 @@ export const user = new Elysia()
               username,
             } = body;
 
-            const identity = await jwt.verify(auth.value);
+            const { userId: clerkId } = await auth();
 
-            if (!identity) {
+            if (!clerkId) {
               return error(401, 'Unauthorized');
             }
 
@@ -317,16 +329,16 @@ export const user = new Elysia()
           }),
         },
       )
-      .get('/me/blogs', async ({ jwt, error, cookie: { auth } }) => {
+      .get('/me/blogs', async ({ error }) => {
         try {
-          const identity = await jwt.verify(auth.value);
+          const { userId: clerkId } = await auth();
 
-          if (!identity) {
+          if (!clerkId) {
             return error(401, 'Unauthorized');
           }
 
           const user = await db.user.findUnique({
-            where: { id: identity.id as string },
+            where: { clerkId },
           });
 
           if (!user) {
@@ -406,7 +418,12 @@ export const user = new Elysia()
               },
               include: {
                 author: true,
-                comments: true,
+                comments: {
+                  include: {
+                    blog: true,
+                    user: true,
+                  },
+                },
                 likes: true,
               },
               orderBy: {

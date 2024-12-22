@@ -7,7 +7,7 @@ import {
   unlikeBlog,
 } from '@/services/blog';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { FaHeart } from 'react-icons/fa';
+import { FaBookmark, FaHeart } from 'react-icons/fa';
 import {
   Bookmark,
   Heart,
@@ -16,7 +16,7 @@ import {
   MoreVertical,
   Share,
 } from 'lucide-react';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { HoverCardProfile } from '../../_components/hover-card-profile';
@@ -29,18 +29,24 @@ import { Button } from '@/components/ui/button';
 import useFooterStore from '@/store/footerStore';
 import { cn } from '@/lib/utils';
 import { SheetComments } from '../../_components/sheet-comments';
-import { getCurrentUser } from '@/services/user';
+import { favoriteBlog, getCurrentUser, unfavoriteBlog } from '@/services/user';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { queryClient } from '@/providers/tanstack-query-provider';
 import dynamic from 'next/dynamic';
 import { blogStore } from '@/store/blogStore';
 import { User } from '@/types/user';
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { DropdownMenuContent } from '@radix-ui/react-dropdown-menu';
 
 interface BlogDetailsProps {
-  params: {
-    blogId: string;
-  };
+  params: { blogId: string };
 }
 
 const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
@@ -49,6 +55,7 @@ const Renderer = dynamic(() => import('@/app/(main)/_components/renderer'), {
 
 const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
   const isFooterVisible = useFooterStore((state) => state.isFooterVisible);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const { setOpenSheetComments } = blogStore();
 
@@ -104,8 +111,46 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
     mutationFn: unlikeBlog,
   });
 
+  const { mutate: mutationFavoriteBlog, isPending: isFavoritePending } =
+    useMutation({
+      mutationKey: ['favorite-blog', blog?.id],
+      mutationFn: favoriteBlog,
+      onError(error, variables, context) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message || error.response?.data);
+        } else {
+          toast.error('An error occurred. Please try again later');
+        }
+      },
+      onSuccess(data, variables, context) {
+        toast.success('Blog favorited successfully');
+      },
+    });
+
+  const { mutate: mutationUnfavoriteBlog, isPending: isUnfavoritePending } =
+    useMutation({
+      mutationKey: ['unfavorite-blog', blog?.id],
+      mutationFn: unfavoriteBlog,
+      onError(error, variables, context) {
+        if (axios.isAxiosError(error)) {
+          toast.error(error.response?.data.message || error.response?.data);
+        } else {
+          toast.error('An error occurred. Please try again later');
+        }
+      },
+      onSuccess(data, variables, context) {
+        toast.success('Blog unfavorited successfully');
+      },
+    });
+
   const handleLikeBlog = () => {
     if (blog) mutationLikeBlog({ blogId: blog.id });
+  };
+
+  const handleToggleFavoriteBlog = () => {
+    if (blog) {
+      mutationFavoriteBlog({ blogId: blog.id });
+    }
   };
 
   return (
@@ -240,8 +285,26 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                 </div>
               </div>
               <div className="flex items-center gap-x-2">
-                <Bookmark className="h-5 w-5 hover:opacity-50 cursor-pointer" />
-                <MoreVertical className="h-5 w-5 hover:opacity-50 cursor-pointer" />
+                <div
+                  onClick={handleToggleFavoriteBlog}
+                  className="hover:opacity-50 cursor-pointer"
+                >
+                  {isFavorite ? (
+                    <FaBookmark className="text-yellow-400 h-5 w-5" />
+                  ) : (
+                    <Bookmark className="h-5 w-5" />
+                  )}
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <MoreVertical className="h-4 w-4 hover:opacity-50 cursor-pointer" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-neutral-200 shadow-lg rounded-lg p-2">
+                    <DropdownMenuLabel>My Blog</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Bookmark</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
             <div className="">
@@ -302,6 +365,12 @@ const BlogDetails: FunctionComponent<BlogDetailsProps> = ({ params }) => {
                   </Link>
                 ))}
               </div>
+              <Link
+                href=""
+                className="text-sm font-medium text-black-500 hover:underline"
+              >
+                More blogs...
+              </Link>
             </div>
           </Card>
         )}

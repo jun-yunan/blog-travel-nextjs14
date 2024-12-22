@@ -3,9 +3,8 @@
 import { FunctionComponent } from 'react';
 import Logo from './logo';
 import { Account } from './account';
-import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs';
 
 import { ChevronLeft, PenLine } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -14,7 +13,6 @@ import { blogStore } from '@/store/blogStore';
 interface HeaderWriteBlogProps {}
 
 const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
-  const { user, isLoading } = useAuth();
   const router = useRouter();
   const {
     setOpenDialogPublish,
@@ -59,15 +57,13 @@ const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
             Save Draft
           </Button>
         </div>
-        {isLoading ? (
-          <div className="animate-pulse h-[50px] w-[50px] rounded-full bg-gray-300"></div>
-        ) : user ? (
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          {/* <UserButton /> */}
           <Account />
-        ) : (
-          <Link href="/sign-in">
-            <Button>Sign In</Button>
-          </Link>
-        )}
+        </SignedIn>
       </div>
     </div>
   );

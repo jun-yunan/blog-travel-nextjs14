@@ -1,6 +1,8 @@
 import { db } from '@/lib/db';
 import { WebhookEvent } from '@clerk/backend';
 import { Webhook } from 'svix';
+import { v4 as uuidv4 } from 'uuid';
+import slugify from 'slugify';
 
 const validatePayload = async (
   req: Request,
@@ -12,7 +14,11 @@ const validatePayload = async (
     'svix-signature': req.headers.get('svix-signature')!,
   };
 
-  const webhook = new Webhook(process.env.CLERK_WEBHOOK_SECRET || '');
+  const webhook = new Webhook(
+    process.env.NODE_ENV === 'production'
+      ? process.env.CLERK_WEBHOOK_SECRET || ''
+      : process.env.CLERK_WEBHOOK_SECRET_LOCAL || '',
+  );
 
   try {
     const event = webhook.verify(payload, svixHeaders) as WebhookEvent;
@@ -43,11 +49,33 @@ export async function POST(req: Request, res: Response) {
     case 'user.updated': {
       console.log(`Creating/Updating user: ${event.data.id}`);
 
-      await db.user.create({
-        data: {
-          username: `${event.data.first_name}${event.data.last_name}`,
+      const fullName = `${event.data.first_name} ${event.data.last_name}`;
+
+      const username =
+        '@' +
+        slugify(fullName, {
+          lower: true,
+          strict: true,
+          replacement: '',
+          trim: true,
+        }) +
+        `${uuidv4().split('-')[0]}`;
+
+      await db.user.upsert({
+        where: {
+          clerkId: event.data.id,
+        },
+        create: {
+          name: fullName,
+          username,
           imageUrl: event.data.image_url,
           clerkId: event.data.id,
+          email: event.data.email_addresses[0].email_address,
+        },
+        update: {
+          name: fullName,
+          username,
+          imageUrl: event.data.image_url,
           email: event.data.email_addresses[0].email_address,
         },
       });

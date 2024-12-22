@@ -151,3 +151,39 @@ export const updateUsernameAndEmail = async ({
 
   return null;
 };
+
+export const favoriteBlog = async ({ blogId }: { blogId: string }) => {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/favorite-blog`,
+    {
+      blogId,
+    },
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+
+  return null;
+};
+
+export const unfavoriteBlog = async ({ blogId }: { blogId: string }) => {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_URL}/users/unfavorite-blog`,
+    {
+      blogId,
+    },
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+
+  return null;
+};

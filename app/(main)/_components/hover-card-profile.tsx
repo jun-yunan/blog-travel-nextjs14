@@ -111,7 +111,7 @@ export function HoverCardProfile<T extends User>({
             <div className="flex items-center pt-2">
               <CalendarDays className="mr-2 h-4 w-4 opacity-70" />
               <span className="text-xs text-muted-foreground">
-                Member since
+                Member since:
                 {format(new Date(information.createdAt), 'dd-MM-yyyy')}
               </span>
             </div>

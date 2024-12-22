@@ -10,6 +10,7 @@ export interface Blog {
   published: boolean;
   author: User;
   content: string;
+  imageUrl: string;
   tags: string[];
   comments: Comment[];
   likes: Like[];

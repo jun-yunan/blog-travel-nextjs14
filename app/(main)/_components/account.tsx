@@ -26,12 +26,10 @@ import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/services/user';
 import { Button } from '@/components/ui/button';
 import { ToggleTheme } from './toggle-theme';
-import { logout } from '@/services/auth';
 import { toast } from 'react-toastify';
-import { t } from 'elysia';
 import { DialogSignOut } from '@/app/(auth_old)/_components/dialog-sign-out';
 import { useState } from 'react';
-
+import { SignOutButton } from '@clerk/nextjs';
 export function Account() {
   const router = useRouter();
   const { data: user } = useQuery({
@@ -41,19 +39,7 @@ export function Account() {
 
   const [open, setOpen] = useState(false);
 
-  const handleLogout = async () => {
-    await fetch('/api/auth/sign-out', {
-      method: 'GET',
-      credentials: 'include',
-    })
-      .then(() => {
-        toast.success('Logout successfully');
-        router.push('/sign-in');
-      })
-      .catch(() => {
-        toast.error('Logout failed');
-      });
-  };
+  const handleLogout = async () => {};
 
   return (
     <>
@@ -129,7 +115,7 @@ export function Account() {
               <span>Support</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => setOpen(true)}>
+            <DropdownMenuItem onSelect={() => setOpen(true)}>
               <LogOut />
               <span>Log out</span>
             </DropdownMenuItem>

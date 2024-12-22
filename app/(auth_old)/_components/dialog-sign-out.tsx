@@ -1,16 +1,15 @@
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { Dispatch, SetStateAction } from 'react';
+import { SignOutButton } from '@clerk/nextjs';
 
 export function DialogSignOut({
   children,
@@ -24,22 +23,24 @@ export function DialogSignOut({
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   return (
-    <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            Are you sure you want to sign out?
-          </AlertDialogTitle>
-          <AlertDialogDescription>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you sure you want to sign out?</DialogTitle>
+          <DialogDescription>
             You will be redirected to the sign in page.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onClick}>Sign out</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="ghost" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <SignOutButton redirectUrl="/sign-in">
+            <Button variant="destructive">Sign out</Button>
+          </SignOutButton>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

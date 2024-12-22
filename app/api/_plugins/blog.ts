@@ -6,6 +6,7 @@ import cloudinary from 'cloudinary';
 import fs from 'fs';
 import { db } from '@/lib/db';
 import { convertBase64ToImage } from '@/lib/convertBase64ToImage';
+import { auth } from '@clerk/nextjs/server';
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -85,7 +86,7 @@ export const blog = new Elysia()
       })
       .post(
         '/',
-        async ({ body, jwt, error, cookie: { auth } }) => {
+        async ({ body, error }) => {
           try {
             const { title, tags, content, published, coverImage } = body;
 
@@ -100,14 +101,14 @@ export const blog = new Elysia()
               return error(400, 'Missing title, author or content');
             }
 
-            const identity = await jwt.verify(auth.value);
+            const { userId: clerkId } = await auth();
 
-            if (!identity) {
+            if (!clerkId) {
               return error(401, 'Unauthorized');
             }
 
             const user = await db.user.findUnique({
-              where: { id: identity.id as string },
+              where: { clerkId: clerkId },
             });
 
             if (!user) {
@@ -263,16 +264,24 @@ export const blog = new Elysia()
       )
       .delete(
         '/:blogId',
-        async ({ error, jwt, params, cookie: { auth } }) => {
+        async ({ error, params }) => {
           try {
             if (!params.blogId) {
               return error(400, 'Missing blogId');
             }
 
-            const identity = await jwt.verify(auth.value);
+            const { userId: clerkId } = await auth();
 
-            if (!identity) {
+            if (!clerkId) {
               return error(401, 'Unauthorized');
+            }
+
+            const user = await db.user.findUnique({
+              where: { clerkId: clerkId },
+            });
+
+            if (!user) {
+              return error(404, 'User not found');
             }
 
             const blog = await db.blog.delete({
@@ -280,7 +289,7 @@ export const blog = new Elysia()
             });
 
             if (!blog) {
-              return error(404, 'Blog not found');
+              return error(404, 'Delete failed');
             }
 
             return {
@@ -299,7 +308,7 @@ export const blog = new Elysia()
       )
       .put(
         '/:blogId',
-        async ({ error, jwt, params, body, cookie: { auth } }) => {
+        async ({ error, params, body }) => {
           try {
             if (!params.blogId) {
               return error(400, 'Missing blogId');
@@ -308,9 +317,9 @@ export const blog = new Elysia()
               return error(400, 'Missing body');
             }
 
-            const identity = await jwt.verify(auth.value);
+            const { userId: clerkId } = await auth();
 
-            if (!identity) {
+            if (!clerkId) {
               return error(401, 'Unauthorized');
             }
 
@@ -348,7 +357,7 @@ export const blog = new Elysia()
       )
       .post(
         '/like/:blogId',
-        async ({ error, jwt, params, cookie: { auth } }) => {
+        async ({ error, params }) => {
           try {
             const { blogId } = params;
 
@@ -356,14 +365,15 @@ export const blog = new Elysia()
               return error(400, 'Missing blogId');
             }
 
-            const identity = await jwt.verify(auth.value);
+            // const identity = await jwt.verify(auth.value);
+            const { userId: clerkId } = await auth();
 
-            if (!identity) {
+            if (!clerkId) {
               return error(401, 'Unauthorized');
             }
 
             const user = await db.user.findUnique({
-              where: { id: identity.id as string },
+              where: { clerkId },
             });
 
             const blog = await db.blog.findUnique({ where: { id: blogId } });
@@ -494,6 +504,7 @@ export const blog = new Elysia()
                 title: true,
                 id: true,
               },
+              take: 8,
             });
 
             if (!blogs || blogs.length === 0) {

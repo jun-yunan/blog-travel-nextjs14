@@ -5,10 +5,19 @@ import Link from 'next/link';
 import { FunctionComponent } from 'react';
 import { HoverCardProfile } from '../../_components/hover-card-profile';
 import { format } from 'date-fns';
-import { MoreVertical } from 'lucide-react';
+import { Bookmark, MoreVertical } from 'lucide-react';
 
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import Image from 'next/image';
 
 interface BlogItemProps {
   blog: Blog;
@@ -45,16 +54,42 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
             </p>
           </div>
         </div>
-        <div>
-          <MoreVertical className="h-5 w-5" />
-        </div>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <MoreVertical className="h-5 w-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Options</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Bookmark /> Save Blog
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
-      <Link href={`/blogs/${blog.id}`}>
-        <p className="text-lg font-semibold hover:text-purple-500 transition-all duration-300">
-          {blog.title}
-        </p>
-        <div className="w-full hover:bg-slate-100 p-2 rounded hover:bg-opacity-75 max-h-[200px] overflow-hidden">
-          <Renderer value={blog.content} />
+      <Link
+        className="w-full flex items-start gap-x-3 p-2 min-h-[150px] rounded-lg transition-all duration-300 hover:bg-slate-100"
+        href={`/blogs/${blog.id}`}
+      >
+        {blog.imageUrl && (
+          <div>
+            <Image
+              className="w-[300px] h-[300px] object-cover rounded-lg"
+              src={blog.imageUrl}
+              width={300}
+              height={300}
+              alt=""
+            />
+          </div>
+        )}
+        <div className="flex flex-col">
+          <p className="text-lg font-semibold hover:text-purple-500">
+            {blog.title}
+          </p>
+          <div className="w-full p-2 rounded hover:bg-opacity-75 max-h-[200px] overflow-hidden">
+            <Renderer value={blog.content} />
+          </div>
         </div>
       </Link>
       <Link

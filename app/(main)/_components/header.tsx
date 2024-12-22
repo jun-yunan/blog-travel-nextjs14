@@ -34,7 +34,8 @@ const Header: FunctionComponent<HeaderProps> = () => {
         <SignInButton />
       </SignedOut>
       <SignedIn>
-        <UserButton />
+        {/* <UserButton /> */}
+        <Account />
       </SignedIn>
     </div>
   );

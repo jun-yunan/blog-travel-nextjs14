@@ -30,3 +30,22 @@ export const createComment = async ({
 
   return null;
 };
+
+export const deleteCommentById = async ({
+  commentId,
+}: {
+  commentId: string;
+}) => {
+  const response = await axios.delete(
+    `${process.env.NEXT_PUBLIC_API_URL}/comments/${commentId}`,
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+
+  return null;
+};
