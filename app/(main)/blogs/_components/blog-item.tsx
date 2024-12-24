@@ -69,25 +69,22 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
         </DropdownMenu>
       </div>
       <Link
-        className="w-full flex items-start gap-x-3 p-2 min-h-[150px] rounded-lg transition-all duration-300 hover:bg-slate-100"
+        className="w-full flex items-start gap-x-3 p-2 h-[300px] rounded-lg transition-all duration-300 hover:bg-slate-100"
         href={`/blogs/${blog.id}`}
       >
-        {blog.imageUrl && (
-          <div>
-            <Image
-              className="w-[300px] h-[300px] object-cover rounded-lg"
-              src={blog.imageUrl}
-              width={300}
-              height={300}
-              alt=""
-            />
-          </div>
-        )}
-        <div className="flex flex-col">
+        {/* {blog.imageUrl && (
+          <Image
+            className="w-[300px] h-full object-cover rounded-lg"
+            src={blog.imageUrl}
+            // fill
+            alt=""
+          />
+        )} */}
+        <div className="flex flex-col h-full w-full items-start">
           <p className="text-lg font-semibold hover:text-purple-500">
             {blog.title}
           </p>
-          <div className="w-full p-2 rounded hover:bg-opacity-75 max-h-[200px] overflow-hidden">
+          <div className="w-full p-2 rounded hover:bg-opacity-75 h-full overflow-hidden">
             <Renderer value={blog.content} />
           </div>
         </div>

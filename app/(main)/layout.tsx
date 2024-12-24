@@ -7,6 +7,9 @@ import { usePathname } from 'next/navigation';
 import HeaderWriteBlog from './_components/header-write-blog';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from './_components/app-sidebar';
+import { MessageCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { ChatPopover } from './_components/chat-popover';
 
 interface LayoutMainProps {
   children: React.ReactNode;
@@ -21,6 +24,7 @@ const LayoutMain: FunctionComponent<LayoutMainProps> = ({ children }) => {
         {children}
       </main>
       <Footer />
+      <ChatPopover />
     </div>
   );
 };
