@@ -133,7 +133,7 @@ export const blog = new Elysia()
 
             if (base64Images.length !== 0) {
               base64Images.forEach((base64Image, index) => {
-                const outputFilePath = `${process.cwd()}/tmp/${
+                const outputFilePath = `${process.env.NODE_ENV === 'production' ? '/tmp/' : process.cwd() + '/tmp/'}${
                   user.id
                 }-${Date.now()}-${uuidv4()}.png`;
                 convertBase64ToImage(base64Image, outputFilePath);
@@ -189,11 +189,15 @@ export const blog = new Elysia()
             if (coverImage) {
               const bytes = await coverImage.arrayBuffer();
               const buffers = new Uint8Array(bytes);
-              const pathCoverImage = path.join(
-                process.cwd(),
-                'tmp',
-                uuidv4() + coverImage.name,
-              );
+              // const pathCoverImage = path.join(
+              //   process.cwd(),
+              //   'tmp',
+              //   uuidv4() + coverImage.name,
+              // );
+
+              const pathCoverImage = `${process.env.NODE_ENV === 'production' ? '/tmp/' : process.cwd() + '/tmp/'}${
+                user.id
+              }-${uuidv4()}.jpg`;
               fs.writeFileSync(pathCoverImage, buffers);
 
               const { secure_url } = await cloudinary.v2.uploader.upload(

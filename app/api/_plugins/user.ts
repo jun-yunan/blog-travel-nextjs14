@@ -5,6 +5,7 @@ import cloudinary from 'cloudinary';
 import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
 import { auth } from '@clerk/nextjs/server';
+import { v4 as uuidv4 } from 'uuid';
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -99,9 +100,9 @@ export const user = new Elysia()
           }
 
           const bytes = await file.arrayBuffer();
-          const filePath = `${process.cwd()}/tmp/${Date.now()}-${
-            currentUser.id
-          }-${file.name}`;
+
+          const filePath = `${process.env.NODE_ENV === 'production' ? '/tmp/' : process.cwd() + '/tmp/'}${currentUser.id}-${uuidv4()}.png`;
+
           await fs.writeFile(filePath, new Uint8Array(bytes));
 
           const upload = await cloudinary.v2.uploader.upload(filePath, {

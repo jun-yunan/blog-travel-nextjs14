@@ -69,11 +69,15 @@ export const comment = new Elysia()
 
               const buffer = new Uint8Array(bytes);
 
-              const pathImage = path.join(
-                `${process.cwd()}`,
-                'tmp',
-                `${user.id}-${blogId}-${uuidv4()}.jpg`,
-              );
+              // const pathImage = path.join(
+              //   `${process.cwd()}`,
+              //   'tmp',
+              //   `${user.id}-${blogId}-${uuidv4()}.jpg`,
+              // );
+
+              const pathImage = `${process.env.NODE_ENV === 'production' ? '/tmp/' : process.cwd() + '/tmp/'}${
+                user.id
+              }-${blogId}-${uuidv4()}.jpg`;
 
               fs.writeFileSync(pathImage, buffer);
 

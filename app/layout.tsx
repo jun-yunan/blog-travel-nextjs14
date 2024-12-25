@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/providers/theme-provider';
 import ToastProvider from '@/providers/toast-provider';
 import TanstackQueryProvider from '@/providers/tanstack-query-provider';
 import { ClerkProvider } from '@clerk/nextjs';
+import ConvexClientProvider from '@/providers/convex-client-provider';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -28,24 +29,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <TanstackQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-              <ToastProvider />
-            </ThemeProvider>
-          </TanstackQueryProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    // <ClerkProvider>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <TanstackQueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+            <ToastProvider />
+          </ThemeProvider>
+        </TanstackQueryProvider>
+      </body>
+    </html>
+    // </ClerkProvider>
   );
 }
