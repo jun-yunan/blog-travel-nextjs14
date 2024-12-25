@@ -7,6 +7,7 @@ import fs from 'fs';
 import { db } from '@/lib/db';
 import { convertBase64ToImage } from '@/lib/convertBase64ToImage';
 import { auth } from '@clerk/nextjs/server';
+import slugify from 'slugify';
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -217,15 +218,20 @@ export const blog = new Elysia()
               fs.unlinkSync(pathCoverImage);
             }
 
+            const slug = slugify(title, {
+              lower: true,
+              replacement: '-',
+              strict: true,
+            });
+
             const blog = await db.blog.create({
               data: {
                 // authorId: user.id,
                 title,
                 content: JSON.stringify(contentParsed),
                 imageUrl: coverImageUrl,
-
                 tags: listTags,
-                slug: title.toLowerCase().replace(/ /g, '-'),
+                slug,
                 published: JSON.parse(published),
                 author: {
                   connect: { id: user.id },

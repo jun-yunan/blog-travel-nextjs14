@@ -4,7 +4,6 @@ import './globals.css';
 import { ThemeProvider } from '@/providers/theme-provider';
 import ToastProvider from '@/providers/toast-provider';
 import TanstackQueryProvider from '@/providers/tanstack-query-provider';
-import { ClerkProvider } from '@clerk/nextjs';
 import ConvexClientProvider from '@/providers/convex-client-provider';
 
 const geistSans = localFont({
@@ -29,7 +28,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // <ClerkProvider>
     <ConvexClientProvider>
       <html lang="en">
         <body
@@ -49,6 +47,5 @@ export default function RootLayout({
         </body>
       </html>
     </ConvexClientProvider>
-    // </ClerkProvider>
   );
 }

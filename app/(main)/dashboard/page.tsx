@@ -6,6 +6,8 @@ import CardTravelAdvice from './_components/card-travel-advice';
 import CardExplore from './_components/card-explore';
 import CarouselTravel from './_components/carousel-travel';
 import { Button } from '@/components/ui/button';
+import PrimaryBlog from './_components/primary-blog';
+import RecentBlogs from './_components/recent-blogs';
 
 interface DashboardPageProps {}
 
@@ -43,7 +45,7 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
         </div>
       </div>
       <div className="mt-[160px] flex items-center lg:w-[80%] px-2 w-full gap-x-11">
-        <div className="w-[50%] h-full flex flex-col items-start">
+        {/* <div className="w-[50%] h-full flex flex-col items-start">
           <Image
             src="/images/paris.jpg"
             alt=""
@@ -63,8 +65,9 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
               vel massa donec sit.
             </p>
           </div>
-        </div>
-        <div className="w-[50%] flex flex-col h-full items-start">
+        </div> */}
+        <PrimaryBlog />
+        {/* <div className="w-[50%] flex flex-col h-full items-start">
           <div className="lg:mb-[35px] mb-1 lg:text-3xl text-xl font-medium leading-tight">
             Recent Blogs
           </div>
@@ -82,7 +85,8 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
               title="Lorem ipsum dolor sit amet. dolor sit amet, consectetur"
             />
           </div>
-        </div>
+        </div> */}
+        <RecentBlogs />
       </div>
       <div className="mt-[160px] w-[80%] flex flex-col items-center gap-y-14">
         <div className="lg:text-6xl text-5xl font-bold">Travel Advice</div>
