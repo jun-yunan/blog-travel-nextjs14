@@ -4,12 +4,12 @@ import { create } from 'domain';
 
 export default defineSchema({
   users: defineTable({
-    name: v.string(),
+    name: v.optional(v.string()),
     username: v.string(),
     clerkId: v.string(),
     email: v.string(),
+    imageUrl: v.string(),
 
-    imageUrl: v.optional(v.string()),
     personalWebsite: v.optional(v.string()),
     bio: v.optional(v.string()),
     location: v.optional(v.string()),
