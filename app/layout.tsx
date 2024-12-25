@@ -30,23 +30,25 @@ export default function RootLayout({
 }>) {
   return (
     // <ClerkProvider>
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <TanstackQueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ConvexClientProvider>{children}</ConvexClientProvider>
-            <ToastProvider />
-          </ThemeProvider>
-        </TanstackQueryProvider>
-      </body>
-    </html>
+    <ConvexClientProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <TanstackQueryProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <ToastProvider />
+            </ThemeProvider>
+          </TanstackQueryProvider>
+        </body>
+      </html>
+    </ConvexClientProvider>
     // </ClerkProvider>
   );
 }

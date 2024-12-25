@@ -1,8 +1,7 @@
 'use client';
 
-// import LogoLoading from '@/app/(main)/_components/logo-loading';
 import { ClerkProvider, useAuth } from '@clerk/nextjs';
-import { Authenticated, AuthLoading, ConvexReactClient } from 'convex/react';
+import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { FunctionComponent } from 'react';
 
