@@ -1,4 +1,3 @@
-import { auth } from '@clerk/nextjs/server';
 import { mutation, query } from './_generated/server';
 import { ConvexError, v } from 'convex/values';
 
@@ -56,33 +55,33 @@ export const deleteBlog = mutation({
   },
 });
 
-export const generateUploadUrl = mutation(async (ctx) => {
-  return await ctx.storage.generateUploadUrl();
-});
+// export const generateUploadUrl = mutation(async (ctx) => {
+//   return await ctx.storage.generateUploadUrl();
+// });
 
-export const uploadImage = mutation({
-  args: { storageId: v.id('_storage') },
-  handler: async (ctx, args) => {
-    const { userId: clerkId } = await auth();
+// export const uploadImage = mutation({
+//   args: { storageId: v.id('_storage') },
+//   handler: async (ctx, args) => {
+//     const { userId: clerkId } = await auth();
 
-    if (!clerkId) {
-      throw new ConvexError('Unauthorized');
-    }
+//     if (!clerkId) {
+//       throw new ConvexError('Unauthorized');
+//     }
 
-    const user = await ctx.db
-      .query('users')
-      .withIndex('by_clerkId', (q) => q.eq('clerkId', clerkId))
-      .unique();
+//     const user = await ctx.db
+//       .query('users')
+//       .withIndex('by_clerkId', (q) => q.eq('clerkId', clerkId))
+//       .unique();
 
-    if (!user) {
-      throw new ConvexError('User not found');
-    }
+//     if (!user) {
+//       throw new ConvexError('User not found');
+//     }
 
-    await ctx.db.insert('blogs', {
-      content: 'Test',
-      authorId: user._id,
-      imageUrl: args.storageId,
-      title: 'Test',
-    });
-  },
-});
+//     await ctx.db.insert('blogs', {
+//       content: 'Test',
+//       authorId: user._id,
+//       imageUrl: args.storageId,
+//       title: 'Test',
+//     });
+//   },
+// });

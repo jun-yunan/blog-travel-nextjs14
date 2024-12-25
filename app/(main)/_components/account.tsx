@@ -26,10 +26,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getCurrentUser } from '@/services/user';
 import { Button } from '@/components/ui/button';
 import { ToggleTheme } from './toggle-theme';
-import { toast } from 'react-toastify';
-import { DialogSignOut } from '@/app/(auth_old)/_components/dialog-sign-out';
+import { DialogSignOut } from '@/app/auth/_components/dialog-sign-out';
 import { useState } from 'react';
-import { SignOutButton } from '@clerk/nextjs';
 export function Account() {
   const router = useRouter();
   const { data: user } = useQuery({
