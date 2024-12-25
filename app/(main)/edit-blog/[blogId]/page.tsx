@@ -12,27 +12,30 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useMutation } from '@tanstack/react-query';
-import { createBlog } from '@/services/blog';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { createBlog, getBlogById } from '@/services/blog';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import DialogDraft from './_components/dialog-draft';
-import { DialogPublish } from './_components/dialog-publish';
+import DialogDraft from '@/app/(main)/edit-blog/_components/dialog-draft';
+import { DialogPublish } from '@/app/(main)/edit-blog/_components/dialog-publish';
 import { formCreateBlog } from '@/schema/form';
 import Quill from 'quill';
 import { Card } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
 import { blogStore } from '@/store/blogStore';
 
-interface WriteBlogProps {}
+interface EditBlogProps {
+  params: {
+    blogId: string;
+  };
+}
 
-const Editor = dynamic(() => import('../_components/editor'), { ssr: false });
+const Editor = dynamic(() => import('@/app/(main)/_components/editor'), {
+  ssr: false,
+});
 
-const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
+const EditBlog: FunctionComponent<EditBlogProps> = ({ params }) => {
   const editorRef = useRef<Quill | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  const [publish, setPublish] = useState(false);
 
   const [coverImage, setCoverImage] = useState<File | null>(null);
 
@@ -46,13 +49,13 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     },
     resolver: zodResolver(formCreateBlog),
   });
-  const {
-    openDialogPublish,
-    setOpenDialogPublish,
-    writeBlog,
-    setWriteBlog,
-    setOpenDialogDraft,
-  } = blogStore();
+  const { setOpenDialogPublish, writeBlog, setWriteBlog, setOpenDialogDraft } =
+    blogStore();
+
+  const { data: blog, isLoading } = useQuery({
+    queryKey: ['blog', params.blogId],
+    queryFn: () => getBlogById({ blogId: params.blogId }),
+  });
 
   const { mutate: mutationCreateBlog, isPending } = useMutation({
     mutationKey: ['create-blog'],
@@ -89,6 +92,11 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     setWriteBlog({ title });
   }, [setWriteBlog, title]);
 
+  useEffect(() => {
+    form.setValue('title', blog?.title || '');
+    form.setValue('content', blog?.content || '');
+  }, [blog, form]);
+
   return (
     <div className="w-full h-[1500px] flex flex-col items-center mb-10">
       <Form {...form}>
@@ -103,6 +111,7 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
             form={form}
             submitRef={submitRef}
           />
+          {/* <div>{params.blogId}</div> */}
           <div className="w-full">
             <FormField
               control={form.control}
@@ -124,12 +133,15 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
           </div>
           <div className="w-full h-full flex gap-x-6">
             <Card className="w-full h-full">
-              <Editor
-                variant="write"
-                innerRef={editorRef}
-                onSubmit={() => {}}
-                form={form}
-              />
+              {blog && (
+                <Editor
+                  variant="edit"
+                  innerRef={editorRef}
+                  onSubmit={() => {}}
+                  form={form}
+                  defaultValue={JSON.parse(blog.content)}
+                />
+              )}
             </Card>
           </div>
           <button type="submit" ref={submitRef} className="hidden"></button>
@@ -139,4 +151,4 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   );
 };
 
-export default WriteBlog;
+export default EditBlog;

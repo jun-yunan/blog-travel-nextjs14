@@ -20,6 +20,7 @@ type EditorValue = {
 };
 
 interface EditorProps {
+  variant: 'edit' | 'write';
   form: UseFormReturn<z.infer<typeof formCreateBlog>>;
   onSubmit: ({ image, body }: EditorValue) => void;
   onCancel?: () => void;
@@ -37,6 +38,7 @@ const Editor = ({
   onCancel,
   placeholder = 'Write something...',
   form,
+  variant,
 }: EditorProps) => {
   const [text, setText] = React.useState('');
 

@@ -10,6 +10,7 @@ import { Bookmark, PencilLine, Pin, Trash2 } from 'lucide-react';
 import { FunctionComponent } from 'react';
 import { blogStore } from '@/store/blogStore';
 import { useDeleteBlog } from '@/hooks/useDeleteBlog';
+import { useRouter } from 'next/navigation';
 
 interface DropdownMenuBlogProps {
   children?: React.ReactNode;
@@ -22,6 +23,8 @@ const DropdownMenuBlog: FunctionComponent<DropdownMenuBlogProps> = ({
 }) => {
   const { onOpenChange, setBlogId } = useDeleteBlog();
 
+  const router = useRouter();
+
   const handleDeleteBlog = () => {
     setBlogId(blogId);
     onOpenChange(true);
@@ -32,7 +35,7 @@ const DropdownMenuBlog: FunctionComponent<DropdownMenuBlogProps> = ({
       <DropdownMenuContent>
         <DropdownMenuLabel>My Blog</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/edit-blog/${blogId}`)}>
           <PencilLine />
           <p>Edit Blog</p>
         </DropdownMenuItem>

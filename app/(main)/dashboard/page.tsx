@@ -45,47 +45,7 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
         </div>
       </div>
       <div className="mt-[160px] flex items-center lg:w-[80%] px-2 w-full gap-x-11">
-        {/* <div className="w-[50%] h-full flex flex-col items-start">
-          <Image
-            src="/images/paris.jpg"
-            alt=""
-            width={700}
-            height={500}
-            className="object-cover w-[700px] h-[500px]"
-          />
-          <div className="mt-[38px] flex flex-col items-start gap-y-7">
-            <Link
-              href=""
-              className="text-4xl font-medium leading-tight hover:underline"
-            >
-              Solo Road trip to Paris
-            </Link>
-            <p className="text-base font-light leading-tight">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cum in
-              vel massa donec sit.
-            </p>
-          </div>
-        </div> */}
         <PrimaryBlog />
-        {/* <div className="w-[50%] flex flex-col h-full items-start">
-          <div className="lg:mb-[35px] mb-1 lg:text-3xl text-xl font-medium leading-tight">
-            Recent Blogs
-          </div>
-          <div className="flex flex-col items-center w-full h-full lg:gap-y-14 gap-y-4">
-            <CardBlog
-              imageSrc="/images/opera-house-4338215_1920.jpg"
-              title="Lorem ipsum dolor dolor sit amet, consectetur adipiscing"
-            />
-            <CardBlog
-              imageSrc="/images/pexels-kirandeepsingh-20602154.jpg"
-              title="Dolor sit amet, consectetur adipiscing massa donec sit"
-            />
-            <CardBlog
-              imageSrc="/images/pexels-binh-ho-image-355440-1018478.jpg"
-              title="Lorem ipsum dolor sit amet. dolor sit amet, consectetur"
-            />
-          </div>
-        </div> */}
         <RecentBlogs />
       </div>
       <div className="mt-[160px] w-[80%] flex flex-col items-center gap-y-14">
@@ -114,7 +74,7 @@ const DashboardPage: FunctionComponent<DashboardPageProps> = () => {
         </div>
         <div className="lg:self-end self-center">
           <Link
-            href=""
+            href="/blogs"
             className="lg:text-2xl text-xl font-normal hover:underline leading-tight"
           >
             CHECK ALL TRAVEL ADVICE

@@ -30,6 +30,7 @@ import { DialogSignOut } from '@/app/auth/_components/dialog-sign-out';
 import { useState } from 'react';
 export function Account() {
   const router = useRouter();
+
   const { data: user } = useQuery({
     queryKey: ['currentUser', 'user'],
     queryFn: getCurrentUser,

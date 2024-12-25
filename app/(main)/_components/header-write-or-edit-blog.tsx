@@ -4,15 +4,21 @@ import { FunctionComponent } from 'react';
 import Logo from './logo';
 import { Account } from './account';
 import { Button } from '@/components/ui/button';
-import { SignInButton, SignedIn, SignedOut } from '@clerk/nextjs';
-
+import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { ChevronLeft, PenLine } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { blogStore } from '@/store/blogStore';
+import Link from 'next/link';
 
-interface HeaderWriteBlogProps {}
+type VariantBlog = 'write' | 'edit' | null;
 
-const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
+interface HeaderWriteOrEditBlogProps {
+  variant?: VariantBlog;
+}
+
+const HeaderWriteOrEditBlog: FunctionComponent<HeaderWriteOrEditBlogProps> = ({
+  variant,
+}) => {
   const router = useRouter();
   const {
     setOpenDialogPublish,
@@ -43,25 +49,33 @@ const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
               setOpenDialogPublish(true);
               setWriteBlog({ published: true });
             }}
-            className="rounded-full"
-            disabled={!!!writeBlog.content}
+            disabled={writeBlog.content && writeBlog.title ? false : true}
           >
-            <PenLine className="h-[16px] w-[16px]" />
+            <PenLine className="h-5 w-5" />
             <p>Publish Blog</p>
           </Button>
           <Button
-            disabled={!!!writeBlog.content}
+            disabled={writeBlog.content && writeBlog.title ? false : true}
             variant="outline"
-            onClick={() => setOpenDialogDraft(true)}
+            onClick={() => {
+              setOpenDialogDraft(true);
+              setWriteBlog({ published: false });
+            }}
           >
             Save Draft
           </Button>
         </div>
         <SignedOut>
-          <SignInButton />
+          <Link href="/sign-in">
+            <Button
+              variant="outline"
+              className="rounded-full text-sm font-medium"
+            >
+              Sign in
+            </Button>
+          </Link>
         </SignedOut>
         <SignedIn>
-          {/* <UserButton /> */}
           <Account />
         </SignedIn>
       </div>
@@ -69,4 +83,4 @@ const HeaderWriteBlog: FunctionComponent<HeaderWriteBlogProps> = () => {
   );
 };
 
-export default HeaderWriteBlog;
+export default HeaderWriteOrEditBlog;

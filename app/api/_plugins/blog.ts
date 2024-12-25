@@ -70,6 +70,9 @@ export const blog = new Elysia()
             include: {
               author: true,
             },
+            where: {
+              published: true,
+            },
             orderBy: {
               createdAt: 'desc',
             },

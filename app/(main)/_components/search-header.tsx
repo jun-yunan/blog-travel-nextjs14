@@ -25,7 +25,7 @@ const SearchHeader: FunctionComponent<SearchHeaderProps> = () => {
           setIsExpanded(false);
         }}
         className={cn(
-          'transition-all duration-300 ease-in-out prose outline-none bg-transparent lg:w-full lg:block mx-3 focus:text-base placeholder:text-sm lg:placeholder:text-base',
+          'transition-all duration-300 ease-in-out prose outline-none bg-transparent lg:w-full md:w-full lg:block mx-3 focus:text-base placeholder:text-sm lg:placeholder:text-base',
           isExpanded || searchText ? 'w-full block' : 'w-0',
         )}
       />

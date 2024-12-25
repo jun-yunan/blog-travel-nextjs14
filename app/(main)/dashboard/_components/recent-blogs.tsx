@@ -28,6 +28,12 @@ const RecentBlogs = async (props: Props) => {
             </Link>
           ))}
       </div>
+      <Link
+        href="/blogs"
+        className="self-end text-sm text-blue-500 hover:underline font-medium mt-3"
+      >
+        {`More Recent Blogs`.toUpperCase()}
+      </Link>
     </div>
   );
 };

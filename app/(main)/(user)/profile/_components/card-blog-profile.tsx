@@ -23,6 +23,7 @@ import ButtonInteractBlog from './button-interact-blog';
 import Link from 'next/link';
 import { SheetComments } from '@/app/(main)/_components/sheet-comments';
 import { User } from '@/types/user';
+import { Badge } from '@/components/ui/badge';
 
 interface CardBlogProfileProps {
   blog: Blog;
@@ -43,14 +44,6 @@ const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
 }) => {
   return (
     <>
-      {/* <DialogDeleteBlog username={username} /> */}
-      {/* <SheetComments
-        comments={blog.comments}
-        user={currentUser}
-        blogId={blog.id}
-        author={blog.author}
-      /> */}
-
       <Card className="w-full overflow-hidden flex flex-col">
         <div className="w-full flex items-center justify-between p-5">
           <div className="flex items-center gap-x-3">
@@ -75,12 +68,19 @@ const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
               )}
             </HoverCardProfile>
             <div className="flex flex-col items-start gap-y-1">
-              <Link
-                href={`/${blog.author.username}`}
-                className="text-base hover:underline font-semibold"
-              >
-                {blog.author.username}
-              </Link>
+              <div className="flex items-center gap-x-4">
+                <Link
+                  href={`/${blog.author.username}`}
+                  className="text-base hover:underline font-semibold"
+                >
+                  {blog.author.username}
+                </Link>
+                {blog.published ? (
+                  <Badge>Published</Badge>
+                ) : (
+                  <Badge variant="outline">Draft</Badge>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">
                 {format(new Date(blog.createdAt), 'dd-MM-yyyy HH:mm')}
               </p>

@@ -1,12 +1,12 @@
-'use client';
-
 import { FunctionComponent } from 'react';
 import Logo from './logo';
 import NavDesktop from './nav-desktop';
 import { Account } from './account';
 import SearchHeader from './search-header';
 import NavMobile from './nav-mobile';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { Button } from '@/components/ui/button';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
+import Link from 'next/link';
 
 interface HeaderProps {}
 
@@ -18,7 +18,14 @@ const Header: FunctionComponent<HeaderProps> = () => {
       <SearchHeader />
       <NavDesktop />
       <SignedOut>
-        <SignInButton />
+        <Link href="/sign-in">
+          <Button
+            variant="outline"
+            className="rounded-full text-sm font-medium"
+          >
+            Sign in
+          </Button>
+        </Link>
       </SignedOut>
       <SignedIn>
         <Account />
