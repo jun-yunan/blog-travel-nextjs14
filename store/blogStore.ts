@@ -1,25 +1,26 @@
 import { create } from 'zustand';
 
-interface WriteBlog {
+interface Blog {
   title?: string;
   content?: string;
   tags?: string[];
   published?: boolean;
+  variant?: 'write' | 'edit';
 }
 
 type BlogStore = {
   openDialogPublish: boolean;
   openDialogDraft: boolean;
-  writeBlog: WriteBlog;
+  blog: Blog;
   openDialogDelete: boolean;
   openDropdownMenu: boolean;
   openSheetComments?: boolean;
+  setBlog: (blog: Blog) => void;
   setOpenSheetComments: (open: boolean) => void;
   setOpenDropdownMenu: (open: boolean) => void;
   setOpenDialogDelete: (open: boolean) => void;
   setOpenDialogPublish: (open: boolean) => void;
   setOpenDialogDraft: (open: boolean) => void;
-  setWriteBlog: (writeBlog: WriteBlog) => void;
 };
 
 export const blogStore = create<BlogStore>((set) => ({
@@ -28,17 +29,18 @@ export const blogStore = create<BlogStore>((set) => ({
   openDialogDelete: false,
   openDropdownMenu: false,
   openSheetComments: false,
-  writeBlog: {
+  blog: {
     title: '',
     content: '',
     tags: [],
     published: false,
+    variant: 'write',
   },
   setOpenSheetComments: (open) => set({ openSheetComments: open }),
   setOpenDialogPublish: (open) => set({ openDialogPublish: open }),
   setOpenDialogDraft: (open) => set({ openDialogDraft: open }),
-  setWriteBlog: (writeBlog: WriteBlog) =>
-    set((state) => ({ writeBlog: { ...state.writeBlog, ...writeBlog } })),
+  setBlog: (blog: Blog) =>
+    set((state) => ({ blog: { ...state.blog, ...blog } })),
   setOpenDialogDelete: (open) => set({ openDialogDelete: open }),
   setOpenDropdownMenu: (open) => set({ openDropdownMenu: open }),
 }));

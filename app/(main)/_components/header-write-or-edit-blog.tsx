@@ -20,13 +20,8 @@ const HeaderWriteOrEditBlog: FunctionComponent<HeaderWriteOrEditBlogProps> = ({
   variant,
 }) => {
   const router = useRouter();
-  const {
-    setOpenDialogPublish,
-    setWriteBlog,
-    writeBlog,
-    openDialogDraft,
-    setOpenDialogDraft,
-  } = blogStore();
+  const { setOpenDialogPublish, setOpenDialogDraft, setBlog, blog } =
+    blogStore();
   return (
     <div className="fixed lg:px-12 px-2 z-50 overflow-x-hidden inset-0 flex items-center justify-between bg-white dark:bg-gray-800 w-full h-[75px]">
       <div className="flex items-center gap-x-2">
@@ -47,19 +42,19 @@ const HeaderWriteOrEditBlog: FunctionComponent<HeaderWriteOrEditBlogProps> = ({
           <Button
             onClick={() => {
               setOpenDialogPublish(true);
-              setWriteBlog({ published: true });
+              setBlog({ published: true });
             }}
-            disabled={writeBlog.content && writeBlog.title ? false : true}
+            disabled={blog.content && blog.title ? false : true}
           >
             <PenLine className="h-5 w-5" />
             <p>Publish Blog</p>
           </Button>
           <Button
-            disabled={writeBlog.content && writeBlog.title ? false : true}
+            disabled={blog.content && blog.title ? false : true}
             variant="outline"
             onClick={() => {
               setOpenDialogDraft(true);
-              setWriteBlog({ published: false });
+              setBlog({ published: false });
             }}
           >
             Save Draft

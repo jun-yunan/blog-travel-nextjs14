@@ -9,30 +9,29 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { createBlog } from '@/services/blog';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import DialogDraft from './_components/dialog-draft';
-import { DialogPublish } from './_components/dialog-publish';
 import { formCreateBlog } from '@/schema/form';
 import Quill from 'quill';
 import { Card } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
 import { blogStore } from '@/store/blogStore';
+import DialogDraft from '../_components/dialog-draft';
+import { DialogPublish } from '../_components/dialog-publish';
 
 interface WriteBlogProps {}
 
-const Editor = dynamic(() => import('../_components/editor'), { ssr: false });
+const Editor = dynamic(() => import('@/app/(main)/_components/editor'), {
+  ssr: false,
+});
 
 const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   const editorRef = useRef<Quill | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  const [publish, setPublish] = useState(false);
 
   const [coverImage, setCoverImage] = useState<File | null>(null);
 
@@ -46,13 +45,8 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     },
     resolver: zodResolver(formCreateBlog),
   });
-  const {
-    openDialogPublish,
-    setOpenDialogPublish,
-    writeBlog,
-    setWriteBlog,
-    setOpenDialogDraft,
-  } = blogStore();
+  const { setOpenDialogPublish, setOpenDialogDraft, blog, setBlog } =
+    blogStore();
 
   const { mutate: mutationCreateBlog, isPending } = useMutation({
     mutationKey: ['create-blog'],
@@ -63,6 +57,7 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
       form.reset();
       setOpenDialogPublish(false);
       setOpenDialogDraft(false);
+      setBlog({ content: '', tags: [], title: '', published: false });
     },
     onError(error, variables, context) {
       console.log(error);
@@ -78,7 +73,7 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
     console.log(data);
     mutationCreateBlog({
       data,
-      published: writeBlog.published || false,
+      published: blog.published || false,
       coverImage,
     });
   };
@@ -86,8 +81,8 @@ const WriteBlog: FunctionComponent<WriteBlogProps> = () => {
   const title = form.watch('title');
 
   useEffect(() => {
-    setWriteBlog({ title });
-  }, [setWriteBlog, title]);
+    setBlog({ title });
+  }, [setBlog, title]);
 
   return (
     <div className="w-full h-[1500px] flex flex-col items-center mb-10">

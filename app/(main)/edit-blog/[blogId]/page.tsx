@@ -9,20 +9,20 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
+import { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createBlog, getBlogById } from '@/services/blog';
+import { editBlog, getBlogById } from '@/services/blog';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import DialogDraft from '@/app/(main)/edit-blog/_components/dialog-draft';
-import { DialogPublish } from '@/app/(main)/edit-blog/_components/dialog-publish';
-import { formCreateBlog } from '@/schema/form';
+import { formEditBlog } from '@/schema/form';
 import Quill from 'quill';
 import { Card } from '@/components/ui/card';
 import dynamic from 'next/dynamic';
 import { blogStore } from '@/store/blogStore';
+import DialogDraft from '../../_components/dialog-draft';
+import { DialogPublish } from '../../_components/dialog-publish';
 
 interface EditBlogProps {
   params: {
@@ -41,31 +41,36 @@ const EditBlog: FunctionComponent<EditBlogProps> = ({ params }) => {
 
   const submitRef = useRef<HTMLButtonElement>(null);
 
-  const form = useForm<z.infer<typeof formCreateBlog>>({
+  const form = useForm<z.infer<typeof formEditBlog>>({
     defaultValues: {
       title: '',
       content: '',
       tags: '',
     },
-    resolver: zodResolver(formCreateBlog),
+    resolver: zodResolver(formEditBlog),
   });
-  const { setOpenDialogPublish, writeBlog, setWriteBlog, setOpenDialogDraft } =
-    blogStore();
+  const {
+    setOpenDialogPublish,
+    setBlog,
+    blog: blogData,
+    setOpenDialogDraft,
+  } = blogStore();
 
   const { data: blog, isLoading } = useQuery({
     queryKey: ['blog', params.blogId],
     queryFn: () => getBlogById({ blogId: params.blogId }),
   });
 
-  const { mutate: mutationCreateBlog, isPending } = useMutation({
-    mutationKey: ['create-blog'],
-    mutationFn: createBlog,
+  const { mutate: mutationEditBlog, isPending } = useMutation({
+    mutationKey: ['edit-blog'],
+    mutationFn: editBlog,
     onSuccess(data, variables, context) {
       toast.success('Blog published successfully!');
       editorRef.current?.setContents([]);
       form.reset();
       setOpenDialogPublish(false);
       setOpenDialogDraft(false);
+      setBlog({ content: '', tags: [], title: '', published: false });
     },
     onError(error, variables, context) {
       console.log(error);
@@ -77,20 +82,21 @@ const EditBlog: FunctionComponent<EditBlogProps> = ({ params }) => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formCreateBlog>) => {
+  const onSubmit = (data: z.infer<typeof formEditBlog>) => {
     console.log(data);
-    mutationCreateBlog({
+    mutationEditBlog({
       data,
-      published: writeBlog.published || false,
+      published: blogData.published || false,
       coverImage,
+      blogId: params.blogId,
     });
   };
 
   const title = form.watch('title');
 
   useEffect(() => {
-    setWriteBlog({ title });
-  }, [setWriteBlog, title]);
+    setBlog({ title });
+  }, [setBlog, title]);
 
   useEffect(() => {
     form.setValue('title', blog?.title || '');
@@ -111,7 +117,6 @@ const EditBlog: FunctionComponent<EditBlogProps> = ({ params }) => {
             form={form}
             submitRef={submitRef}
           />
-          {/* <div>{params.blogId}</div> */}
           <div className="w-full">
             <FormField
               control={form.control}

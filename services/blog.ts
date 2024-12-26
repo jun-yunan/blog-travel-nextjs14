@@ -1,4 +1,4 @@
-import { formCreateBlog } from '@/schema/form';
+import { formCreateBlog, formEditBlog } from '@/schema/form';
 import { Blog } from '@/types/blog';
 import axios from 'axios';
 import { z } from 'zod';
@@ -24,6 +24,42 @@ export const createBlog = async ({
   }
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/blogs`,
+    formData,
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 201 && response.data) {
+    return response.data;
+  }
+
+  return null;
+};
+
+export const editBlog = async ({
+  data,
+  published,
+  coverImage,
+  blogId,
+}: {
+  data: z.infer<typeof formEditBlog>;
+  published: boolean;
+  coverImage: File | null;
+  blogId: string;
+}) => {
+  const formData = new FormData();
+  formData.set('title', data.title);
+  formData.set('content', data.content);
+  formData.set('published', String(published));
+  if (data.tags) {
+    formData.set('tags', JSON.stringify(data.tags));
+  }
+  if (coverImage) {
+    formData.set('coverImage', coverImage);
+  }
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_URL}/blogs/${blogId}`,
     formData,
     {
       withCredentials: true,

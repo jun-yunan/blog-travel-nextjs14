@@ -22,8 +22,7 @@ const DialogDraft: FunctionComponent<DialogDraftProps> = ({
   submitRef,
   isPending,
 }) => {
-  const { openDialogDraft, setOpenDialogDraft, setWriteBlog, writeBlog } =
-    blogStore();
+  const { openDialogDraft, setOpenDialogDraft, setBlog } = blogStore();
 
   return (
     <AlertDialog open={openDialogDraft} onOpenChange={setOpenDialogDraft}>
@@ -45,7 +44,7 @@ const DialogDraft: FunctionComponent<DialogDraftProps> = ({
           <Button
             disabled={isPending}
             onClick={() => {
-              setWriteBlog({ published: false });
+              setBlog({ published: false });
               submitRef.current?.click();
             }}
           >

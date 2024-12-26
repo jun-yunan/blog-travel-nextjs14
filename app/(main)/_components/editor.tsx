@@ -44,7 +44,7 @@ const Editor = ({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { setWriteBlog } = blogStore();
+  const { setBlog } = blogStore();
 
   const submitRef = useRef(onSubmit);
   const placeholderRef = useRef(placeholder);
@@ -97,7 +97,7 @@ const Editor = ({
       setText(quill.getText());
       console.log(quill.getContents());
       // console.log(quill.root.innerHTML);
-      setWriteBlog({ content: quill.root.innerHTML });
+      setBlog({ content: quill.root.innerHTML });
       // form.setValue('content', quill.root.innerHTML);
       form.setValue('content', JSON.stringify(quill.getContents()));
     });
@@ -114,7 +114,7 @@ const Editor = ({
         innerRef.current = null;
       }
     };
-  }, [form, innerRef, setWriteBlog]);
+  }, [form, innerRef, setBlog]);
 
   return (
     <div className="flex flex-col w-full h-full">

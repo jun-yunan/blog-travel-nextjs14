@@ -323,11 +323,18 @@ export const blog = new Elysia()
         '/:blogId',
         async ({ error, params, body }) => {
           try {
-            if (!params.blogId) {
-              return error(400, 'Missing blogId');
+            const { title, tags, content, published, coverImage } = body;
+            const { blogId } = params;
+
+            const listTags: string[] = [];
+
+            if (tags) {
+              const tagsParse: string = JSON.parse(tags);
+              tagsParse.split(',').map((tag) => listTags.push(tag.trim()));
             }
-            if (!body) {
-              return error(400, 'Missing body');
+
+            if (!title || !content) {
+              return error(400, 'Missing title, author or content');
             }
 
             const { userId: clerkId } = await auth();
@@ -336,21 +343,141 @@ export const blog = new Elysia()
               return error(401, 'Unauthorized');
             }
 
+            const user = await db.user.findUnique({
+              where: { clerkId: clerkId },
+            });
+
+            if (!user) {
+              return error(404, 'User not found');
+            }
+
+            const contentParsed = JSON.parse(content);
+
+            const base64Images: any[] = [];
+
+            contentParsed.ops.forEach((op: any) => {
+              if (
+                op.insert &&
+                op.insert.image &&
+                op.insert.image.startsWith('data:image')
+              ) {
+                base64Images.push(op.insert.image);
+              }
+            });
+
+            const outputFilePaths: string[] = [];
+
+            if (base64Images.length !== 0) {
+              base64Images.forEach((base64Image, index) => {
+                const outputFilePath = `${process.env.NODE_ENV === 'production' ? '/tmp/' : process.cwd() + '/tmp/'}${
+                  user.id
+                }-${Date.now()}-${uuidv4()}.png`;
+                convertBase64ToImage(base64Image, outputFilePath);
+                outputFilePaths.push(outputFilePath);
+              });
+            }
+
+            const imageUrls: string[] = [];
+
+            if (outputFilePaths.length !== 0) {
+              const cloudinaryPromises = outputFilePaths.map(
+                (outputFilePath) => {
+                  return cloudinary.v2.uploader.upload(outputFilePath, {
+                    folder: 'blogs',
+                    use_filename: true,
+                  });
+                },
+              );
+
+              const cloudinaryResults = await Promise.all(cloudinaryPromises);
+
+              if (!cloudinaryResults) {
+                return error(500, "Can't upload images to cloudinary");
+              }
+
+              outputFilePaths.forEach((outputFilePath) =>
+                fs.unlinkSync(outputFilePath),
+              );
+
+              cloudinaryResults.map((result) =>
+                imageUrls.push(result.secure_url),
+              );
+            }
+
+            if (imageUrls.length !== 0) {
+              contentParsed.ops.forEach((op: any) => {
+                if (
+                  op.insert &&
+                  op.insert.image &&
+                  op.insert.image.startsWith('data:image')
+                ) {
+                  const index = base64Images.indexOf(op.insert.image);
+
+                  if (index !== -1) {
+                    op.insert.image = imageUrls[index];
+                  }
+                }
+              });
+            }
+
+            let coverImageUrl: string | undefined;
+
+            if (coverImage) {
+              const bytes = await coverImage.arrayBuffer();
+              const buffers = new Uint8Array(bytes);
+
+              const pathCoverImage = `${process.env.NODE_ENV === 'production' ? '/tmp/' : process.cwd() + '/tmp/'}${
+                user.id
+              }-${uuidv4()}.jpg`;
+              fs.writeFileSync(pathCoverImage, buffers);
+
+              const { secure_url } = await cloudinary.v2.uploader.upload(
+                pathCoverImage,
+                {
+                  folder: 'blogs',
+                  use_filename: true,
+                },
+              );
+
+              if (!secure_url) {
+                coverImageUrl = undefined;
+              } else {
+                coverImageUrl = secure_url;
+              }
+
+              fs.unlinkSync(pathCoverImage);
+            }
+
+            const slug = slugify(title, {
+              lower: true,
+              replacement: '-',
+              strict: true,
+            });
+
             const blog = await db.blog.update({
-              where: { id: params.blogId },
+              where: { id: blogId },
               data: {
-                title: body.title,
-                content: body.content,
-                slug: body.title.toLowerCase().replace(/ /g, '-'),
+                title,
+                content: JSON.stringify(contentParsed),
+                imageUrl: coverImageUrl,
+                tags: listTags,
+                slug,
+                published: JSON.parse(published),
+                author: {
+                  connect: { id: user.id },
+                },
               },
             });
 
             if (!blog) {
-              return error(404, 'Update failed');
+              return error(500, "Can't create blog");
             }
 
             return {
-              status: 'success',
+              base64Images,
+              outputFilePaths,
+              imageUrls,
+              contentParsed,
               blog,
             };
           } catch (err) {
@@ -363,8 +490,10 @@ export const blog = new Elysia()
           params: t.Object({ blogId: t.String() }),
           body: t.Object({
             title: t.String(),
-            author: t.String(),
+            tags: t.Optional(t.String()),
             content: t.String(),
+            published: t.String(),
+            coverImage: t.Optional(t.File()),
           }),
         },
       )

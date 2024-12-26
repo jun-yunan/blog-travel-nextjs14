@@ -50,6 +50,12 @@ export const formCreateBlog = z.object({
   tags: z.string().optional(),
 });
 
+export const formEditBlog = z.object({
+  title: z.string().min(1, 'Title is required'),
+  content: z.string(),
+  tags: z.string().optional(),
+});
+
 export const formUpdateUsernameAndPassword = z.object({
   username: z
     .string()

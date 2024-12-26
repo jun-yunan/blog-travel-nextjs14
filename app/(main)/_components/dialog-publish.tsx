@@ -43,7 +43,7 @@ export function DialogPublish({
 }: DialogPublishProps) {
   const [image, setImage] = useState<File | null>(null);
 
-  const { openDialogPublish, setOpenDialogPublish, writeBlog, setWriteBlog } =
+  const { openDialogPublish, setOpenDialogPublish, blog, setBlog } =
     blogStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
@@ -66,7 +66,7 @@ export function DialogPublish({
                 <div
                   className="prose"
                   dangerouslySetInnerHTML={{
-                    __html: writeBlog.content || '',
+                    __html: blog.content || '',
                   }}
                 />
               </ScrollArea>
@@ -145,7 +145,7 @@ export function DialogPublish({
           <Button
             disabled={isPending}
             onClick={() => {
-              setWriteBlog({ published: true });
+              setBlog({ published: true });
               submitRef?.current?.click();
             }}
           >
