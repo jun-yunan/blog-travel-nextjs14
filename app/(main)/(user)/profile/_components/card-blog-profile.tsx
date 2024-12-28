@@ -92,12 +92,15 @@ const CardBlogProfile: FunctionComponent<CardBlogProfileProps> = ({
             </DropdownMenuBlog>
           )}
         </div>
-        <CardContent className="min-h-[100px] gap-y-4 flex flex-col items-start">
-          <CardTitle>{blog.title}</CardTitle>
-          <ScrollArea className="h-[150px]">
-            <Renderer value={blog.content} />
-          </ScrollArea>
-        </CardContent>
+        <Link href={`/blogs/${blog.id}`}>
+          <CardContent className="min-h-[100px] gap-y-4 flex flex-col items-start">
+            <CardTitle>{blog.title}</CardTitle>
+            <ScrollArea className="h-[150px]">
+              <Renderer value={blog.content} />
+            </ScrollArea>
+            <p className="text-blue-500 text-sm hover:underline">Read more</p>
+          </CardContent>
+        </Link>
         <div className="w-full flex items-center justify-between px-4 py-1">
           <Button variant="ghost" className="text-base rounded-full">
             <Heart />

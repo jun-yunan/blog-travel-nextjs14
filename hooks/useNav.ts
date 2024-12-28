@@ -9,7 +9,7 @@ const listNav: NavItem[] = [
   },
   {
     name: 'Blogs',
-    href: '/blogs',
+    href: '/blogs?page=1',
   },
   {
     name: 'Write Blog',

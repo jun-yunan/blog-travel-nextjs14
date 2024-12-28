@@ -1,5 +1,6 @@
 import React, {
   MutableRefObject,
+  RefObject,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -24,6 +25,7 @@ export type EditorValue = {
 
 interface CommentFieldProps {
   innerRef?: MutableRefObject<Quill | null>;
+  // imageElementRef: RefObject<HTMLInputElement>;
   onSubmit: ({ image, content }: EditorValue) => void;
   defaultValue?: Delta | Op[];
   disabled?: boolean;
@@ -38,6 +40,7 @@ const CommentField = ({
   disabled = false,
   isSended = false,
   placeholder = 'Write a comment...',
+  // imageElementRef,
 }: CommentFieldProps) => {
   const [text, setText] = useState('');
 
@@ -134,7 +137,7 @@ const CommentField = ({
         innerRef.current = null;
       }
     };
-  }, [innerRef, isSended]);
+  }, [imageElementRef, innerRef, isSended]);
   const toggleToolbar = () => {
     setIsToolbarVisible((prev) => !prev);
     const toolbarElement = containerRef.current?.querySelector('.ql-toolbar');
@@ -184,6 +187,7 @@ const CommentField = ({
                 src={URL.createObjectURL(image)}
                 alt="Uploaded"
                 fill
+                // ref={imageElementRef}
                 className="rounded-xl overflow-hidden border object-cover"
               />
             </div>

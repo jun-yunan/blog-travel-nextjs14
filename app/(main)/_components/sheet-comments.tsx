@@ -20,6 +20,7 @@ import CommentItem from './comment-item';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { User } from '@/types/user';
 import { blogStore } from '@/store/blogStore';
+import Quill from 'quill';
 
 interface SheetCommentsProps {
   children?: React.ReactNode;
@@ -40,7 +41,10 @@ export function SheetComments({
 }: SheetCommentsProps) {
   const { openSheetComments, setOpenSheetComments } = blogStore();
 
+  const commentFieldRef = useRef<Quill | null>(null);
+
   const commentEndRef = useRef<HTMLDivElement>(null);
+  const imageElementRef = useRef<HTMLInputElement>(null);
 
   const { mutate: mutationCreateComment, isPending } = useMutation({
     mutationKey: ['comments', 'create'],
@@ -60,13 +64,17 @@ export function SheetComments({
       queryClient.invalidateQueries({
         queryKey: ['blogs-by-username', username],
       });
+      commentFieldRef.current?.setContents([]);
     },
   });
 
   const onSubmit = async (data: EditorValue) => {
     console.log(data);
 
-    mutationCreateComment({ data, blogId });
+    mutationCreateComment({
+      data,
+      blogId,
+    });
   };
 
   const scrollToBottom = () => {
@@ -107,7 +115,12 @@ export function SheetComments({
             </ScrollArea>
           )}
         </Card>
-        <CommentField disabled={isPending} onSubmit={onSubmit} />
+        <CommentField
+          // imageElementRef={imageElementRef}
+          innerRef={commentFieldRef}
+          disabled={isPending}
+          onSubmit={onSubmit}
+        />
       </SheetContent>
     </Sheet>
   );

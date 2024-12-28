@@ -132,10 +132,14 @@ export const deleteBlogById = async ({ blogId }: { blogId: string }) => {
   return null;
 };
 
-export const getAllBlog = async (): Promise<Blog[] | null> => {
+export const getAllBlog = async ({
+  page,
+}: {
+  page: number;
+}): Promise<Blog[] | null> => {
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/blogs`,
+      `${process.env.NEXT_PUBLIC_API_URL}/blogs?page=${page}`,
       {
         withCredentials: true,
       },

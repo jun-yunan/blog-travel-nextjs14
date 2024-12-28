@@ -64,30 +64,42 @@ export const blog = new Elysia()
           params: t.Object({ blogId: t.String() }),
         },
       )
-      .get('/', async ({ error }) => {
-        try {
-          const blogs = await db.blog.findMany({
-            include: {
-              author: true,
-            },
-            where: {
-              published: true,
-            },
-            orderBy: {
-              createdAt: 'desc',
-            },
-          });
+      .get(
+        '/',
+        async ({ error, query }) => {
+          try {
+            const { page } = query;
 
-          if (!blogs || blogs.length === 0) {
-            return error(404, 'Blogs not found');
+            const blogs = await db.blog.findMany({
+              include: {
+                author: true,
+              },
+              where: {
+                published: true,
+              },
+              skip: page ? (Number(page) - 1) * 10 : 0,
+              take: 10,
+              orderBy: {
+                createdAt: 'desc',
+              },
+            });
+
+            if (!blogs || blogs.length === 0) {
+              return error(404, 'Blogs not found');
+            }
+
+            return blogs;
+          } catch (err) {
+            console.log(err);
+            return error(500, "Something's wrong");
           }
-
-          return blogs;
-        } catch (err) {
-          console.log(err);
-          return error(500, "Something's wrong");
-        }
-      })
+        },
+        {
+          query: t.Object({
+            page: t.Optional(t.Number()),
+          }),
+        },
+      )
       .post(
         '/',
         async ({ body, error }) => {

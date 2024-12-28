@@ -1,7 +1,14 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
 import { Comment } from '@/types/comment';
-import { Edit2, Loader2, MoreHorizontal, Trash2, User } from 'lucide-react';
+import {
+  Edit2,
+  Loader2,
+  MoreHorizontal,
+  MoreVertical,
+  Trash2,
+  User,
+} from 'lucide-react';
 import { FunctionComponent, useState } from 'react';
 
 import { format } from 'date-fns';
@@ -111,7 +118,7 @@ const CommentItem: FunctionComponent<CommentItemProps> = ({
             </Link>
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <MoreHorizontal className="h-4 w-4 hover:opacity-70 cursor-pointer" />
+                <MoreVertical className="h-4 w-4 hover:opacity-70 cursor-pointer" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuLabel>My Comment</DropdownMenuLabel>
@@ -166,7 +173,12 @@ const CommentItem: FunctionComponent<CommentItemProps> = ({
           )}
         </Card>
       </div>
-      <div className="w-full flex items-center justify-start gap-x-2">
+      <div className="w-full flex items-center justify-end pt-1">
+        <p className="text-sm text-muted-foreground">
+          {format(new Date(comment.createdAt), 'dd-MM-yyyy HH:mm')}
+        </p>
+      </div>
+      {/* <div className="w-full flex items-center justify-start gap-x-2">
         <p className="text-sm text-muted-foreground">
           {format(new Date(comment.createdAt), 'dd-MM-yyyy HH:mm')}
         </p>
@@ -176,7 +188,7 @@ const CommentItem: FunctionComponent<CommentItemProps> = ({
         <Button variant="ghost" className="rounded-full" size="sm">
           <p className="text-sm font-semibold">Reply</p>
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };
