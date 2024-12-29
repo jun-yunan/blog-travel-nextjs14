@@ -1,6 +1,6 @@
 'use client';
 
-import { FunctionComponent, useMemo } from 'react';
+import { FunctionComponent, Suspense, useMemo } from 'react';
 import BlogOutstanding from './_components/blog-outstanding';
 import { useQuery } from '@tanstack/react-query';
 import { getAllBlog } from '@/services/blog';
@@ -28,28 +28,30 @@ const BlogsPage: FunctionComponent<BlogsPageProps> = () => {
     queryFn: () => getAllBlog({ page: Number(page) }),
   });
   return (
-    <div className="lg:w-[70%] w-[90%] mb-10 flex flex-col items-center">
-      <div className="self-start flex flex-col gap-y-4 my-8">
-        <h1 className="text-3xl font-bold">Courtside: The Dribbble Blog</h1>
-        {/* <h1 className="text-3xl font-bold">{page}</h1> */}
-        <p>
-          Stay up to date with the latest news and stories from the Dribbble
-          community.
-        </p>
+    <Suspense fallback={<Loader2 className="animate-spin" />}>
+      <div className="lg:w-[70%] w-[90%] mb-10 flex flex-col items-center">
+        <div className="self-start flex flex-col gap-y-4 my-8">
+          <h1 className="text-3xl font-bold">Courtside: The Dribbble Blog</h1>
+          {/* <h1 className="text-3xl font-bold">{page}</h1> */}
+          <p>
+            Stay up to date with the latest news and stories from the Dribbble
+            community.
+          </p>
+        </div>
+        <div>
+          <BlogOutstanding />
+        </div>
+        <div className="w-full flex flex-col gap-y-6 my-6">
+          {isLoading && <Loader2 className="animate-spin" />}
+          {isError && <p>There was an error</p>}
+          {isSuccess &&
+            blogs &&
+            blogs.length > 0 &&
+            blogs.map((blog) => <BlogItem key={blog.id} blog={blog} />)}
+        </div>
+        <PaginationBlogs />
       </div>
-      <div>
-        <BlogOutstanding />
-      </div>
-      <div className="w-full flex flex-col gap-y-6 my-6">
-        {isLoading && <Loader2 className="animate-spin" />}
-        {isError && <p>There was an error</p>}
-        {isSuccess &&
-          blogs &&
-          blogs.length > 0 &&
-          blogs.map((blog) => <BlogItem key={blog.id} blog={blog} />)}
-      </div>
-      <PaginationBlogs />
-    </div>
+    </Suspense>
   );
 };
 
