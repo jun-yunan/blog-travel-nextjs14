@@ -100,6 +100,51 @@ export const blog = new Elysia()
           }),
         },
       )
+      .get(
+        `/search`,
+        async ({ error, query }) => {
+          try {
+            const { q } = query;
+
+            if (!q) {
+              return error(400, 'Missing query');
+            }
+
+            const blogs = await db.blog.findMany({
+              where: {
+                OR: [
+                  {
+                    title: {
+                      contains: q,
+                    },
+                  },
+                  {
+                    content: {
+                      contains: q,
+                    },
+                  },
+                ],
+              },
+              include: {
+                author: true,
+              },
+            });
+
+            if (!blogs || blogs.length === 0) {
+              return [];
+            }
+
+            return blogs;
+          } catch (err) {
+            return error(500, "Something's wrong");
+          }
+        },
+        {
+          query: t.Object({
+            q: t.String(),
+          }),
+        },
+      )
       .post(
         '/',
         async ({ body, error }) => {

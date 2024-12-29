@@ -5,7 +5,14 @@ import Link from 'next/link';
 import { FunctionComponent } from 'react';
 import { HoverCardProfile } from '../../_components/hover-card-profile';
 import { format } from 'date-fns';
-import { Bookmark, MoreVertical } from 'lucide-react';
+import {
+  Bookmark,
+  Facebook,
+  Flag,
+  Link2,
+  MoreVertical,
+  Twitter,
+} from 'lucide-react';
 
 import dynamic from 'next/dynamic';
 import { User } from '@/types/user';
@@ -55,31 +62,39 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
           </div>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <MoreVertical className="h-5 w-5" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Options</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Bookmark /> Save Blog
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-x-2">
+          <Bookmark className="w-5 h-5 cursor-pointer hover:opacity-50" />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreVertical className="h-5 w-5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Options</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Facebook /> Share with Facebook
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Twitter />
+                Share with X
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Link2 />
+                Copy link
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Flag />
+                Report Blog
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <Link
-        className="w-full flex items-start gap-x-3 p-2 h-[300px] rounded-lg transition-all duration-300 hover:bg-slate-100"
         href={`/blogs/${blog.id}`}
+        className="w-full justify-between flex gap-x-3 p-2 h-[200px] rounded-lg transition-all duration-300 hover:bg-slate-100"
       >
-        {/* {blog.imageUrl && (
-          <Image
-            className="w-[300px] h-full object-cover rounded-lg"
-            src={blog.imageUrl}
-            // fill
-            alt=""
-          />
-        )} */}
         <div className="flex flex-col h-full w-full items-start">
           <p className="text-lg font-semibold hover:text-purple-500">
             {blog.title}
@@ -88,6 +103,16 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
             <Renderer value={blog.content} />
           </div>
         </div>
+
+        {blog.imageUrl && (
+          <Image
+            src={blog.imageUrl}
+            className="object-cover rounded-lg hover:scale-105 transition-all duration-300 hover:opacity-75 cursor-pointer"
+            alt=""
+            width={300}
+            height={300}
+          />
+        )}
       </Link>
       <Link
         href={`/blogs/${blog.id}`}

@@ -264,3 +264,22 @@ export const unlikeBlog = async ({ blogId }: { blogId: string }) => {
 
   return null;
 };
+
+export const searchBlog = async ({
+  searchText,
+}: {
+  searchText: string;
+}): Promise<Blog[] | null> => {
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/blogs/search?q=${searchText}`,
+    {
+      withCredentials: true,
+    },
+  );
+
+  if (response.status === 200 && response.data) {
+    return response.data;
+  }
+
+  return null;
+};

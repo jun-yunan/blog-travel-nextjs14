@@ -30,8 +30,7 @@ const Blogs: FunctionComponent<BlogsProps> = () => {
   return (
     <div className="lg:w-[70%] w-[90%] mb-10 flex flex-col items-center">
       <div className="self-start flex flex-col gap-y-4 my-8">
-        <h1 className="text-3xl font-bold">Courtside: The Dribbble Blog</h1>
-        {/* <h1 className="text-3xl font-bold">{page}</h1> */}
+        <h1 className="text-3xl font-bold">Courtside: Blog Travel</h1>
         <p>
           Stay up to date with the latest news and stories from the Dribbble
           community.
