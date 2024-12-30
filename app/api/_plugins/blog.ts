@@ -128,6 +128,9 @@ export const blog = new Elysia()
               include: {
                 author: true,
               },
+              orderBy: {
+                createdAt: 'desc',
+              },
             });
 
             if (!blogs || blogs.length === 0) {
@@ -704,6 +707,9 @@ export const blog = new Elysia()
                 id: true,
               },
               take: 8,
+              orderBy: {
+                createdAt: 'desc',
+              },
             });
 
             if (!blogs || blogs.length === 0) {

@@ -15,14 +15,14 @@ const listNav: NavItem[] = [
     name: 'Write Blog',
     href: '/write-blog',
   },
-  {
-    name: 'Destinations',
-    href: '/destinations',
-  },
-  {
-    name: 'Tour',
-    href: '/tour',
-  },
+  // {
+  //   name: 'Destinations',
+  //   href: '/destinations',
+  // },
+  // {
+  //   name: 'Tour',
+  //   href: '/tour',
+  // },
   {
     name: 'About',
     href: '/about',

@@ -107,7 +107,7 @@ const BlogItem: FunctionComponent<BlogItemProps> = ({ blog }) => {
         {blog.imageUrl && (
           <Image
             src={blog.imageUrl}
-            className="object-cover rounded-lg hover:scale-105 transition-all duration-300 hover:opacity-75 cursor-pointer"
+            className="object-cover hidden lg:block rounded-lg hover:scale-105 transition-all duration-300 hover:opacity-75 cursor-pointer"
             alt=""
             width={300}
             height={300}
